@@ -11,15 +11,15 @@ interface NavProps {
 const Navbar: React.FC<NavProps> = ({ navItems }) => {
   const notifications = 0;
   return (
-    <nav className="flex justify-between items-center px-16 w-full h-16 backdrop-blur-sm bg-white/70 fixed z-[99999] border border-b-dark">
-      <div className="basis-4/5">
+    <nav className="flex justify-between items-center px-16 w-full h-16 backdrop-blur-sm bg-white/70 fixed z-[99999] border border-b-dark ">
+      <div className="basis-1/2">
         <Logo
           textStyle="text-2xl md:text-2xl"
           imgStyle="w-7 h-7 md:w-7 md:h-7"
         />
       </div>
-      <div className="basis-1/5">
-        <ul className="flex justify-between items-center">
+      <div className="basis-1/2 justify-end">
+        <ul className="flex justify-end gap-x-4 items-center">
           <li>
             <Link
               href="/mylistings"

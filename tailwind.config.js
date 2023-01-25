@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -13,11 +13,13 @@ module.exports = {
         home: "-10px 15px 4px rgba(0, 0, 0, 0.25)",
       },
       height: {
+        "70vh": "70vh",
         "90vh": "90vh",
         "95vh": "95vh",
       },
       width: {
         "90vw": "90vw",
+        "70vw": "70vw",
       },
       zIndex: {
         99999: "99999",
@@ -27,6 +29,7 @@ module.exports = {
       primary: "#000",
       secondary: "#fff",
       light: "#EEEEEE",
+      light2: "#AFAFAF",
       dark: "#4D4D4D",
       inherit: colors.inherit,
       current: colors.current,

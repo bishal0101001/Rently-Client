@@ -1,19 +1,23 @@
+import React, { useState } from "react";
 import Image from "next/image";
-import React, { FC, useState } from "react";
+import Link from "next/link";
 
-import { Input, Button, Logo } from "@components/ui";
+import { Logo, Input } from "@components/ui";
+import { useAuth } from "src/hooks/useAuth";
 
 interface Props {}
 
-const SignUpView: FC<Props> = () => {
-  const [name, setName] = useState("");
+const LoginView: React.FC<Props> = () => {
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const { login } = useAuth();
+
   const handleSignup = (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault();
+
+    login("Bishal", email, "1234-431-1234");
     console.log(email, "email");
   };
   return (
@@ -27,16 +31,15 @@ const SignUpView: FC<Props> = () => {
             className="flex flex-col w-[90vw] md:w-96 md:ml-10 "
             onSubmit={handleSignup}
           >
-            <h1 className="text-xl font-bold md:text-2xl">Create an account</h1>
+            <h1 className="text-xl font-bold md:text-2xl">Welcome back,</h1>
             <p className="text-dark text-sm mb-5 md:text-base">
-              Start searching for the perfect room.
+              Continue with google or enter details.
             </p>
-            <Input
-              name="floating_name"
-              onChange={setName}
-              label="Name"
-              value={name}
-            />
+            <button className="flex items-center justify-center w-full h-10 bg-transparent text-primary border-2 border-primary rounded  font-medium">
+              <img src="/google.png" alt="google" className="w-7 h-7" />
+              Continue with Google
+            </button>
+            <p className="my-3 mx-auto">or</p>
             <Input
               label="Email"
               name="floating_email"
@@ -45,53 +48,52 @@ const SignUpView: FC<Props> = () => {
               value={email}
             />
             <Input
-              name="floating_phone"
-              onChange={setPhone}
-              label="Phone"
-              value={phone}
-            />
-            <Input
               name="floating_password"
               onChange={setPassword}
               label="Password"
               type={showPassword ? "text" : "password"}
               value={password}
             />
-            <div className="flex items-center mb-5">
-              <input
-                type="checkbox"
-                className="mr-2 w-4 h-4"
-                onChange={() => setShowPassword(!showPassword)}
-              />
-              Show password
+            <div className="flex items-center justify-between mb-5">
+              <span className="flex justify-center items-center">
+                <input
+                  type="checkbox"
+                  className="mr-2 w-4 h-4"
+                  onChange={() => setShowPassword(!showPassword)}
+                />
+                Show password
+              </span>
+              <Link
+                href="/auth/forgetpassword"
+                className="text-blue-700 underline font-semibold"
+              >
+                Forget password
+              </Link>
             </div>
             <button
               className="w-full h-10 bg-primary text-secondary rounded font-medium"
               type="submit"
             >
-              Create account
+              Login
             </button>
-            <button className="flex items-center justify-center w-full h-10 bg-transparent text-primary border-2 border-primary rounded mt-3 font-medium">
-              <img src="/google.png" alt="google" className="w-7 h-7" />
-              Sign up with Google
-            </button>
+            <span className="mt-5 ">
+              Don't have an account?{" "}
+              <Link href="/auth/signup" className="font-semibold">
+                Sign up
+              </Link>
+            </span>
           </form>
         </div>
       </div>
       <div className="h-screen w-full display-none hidden relative md:block">
         <img
-          src="/assets/livingroom.jpg"
+          src="/assets/image_login-min.jpg"
           alt="img"
-          className="w-full h-[95vh] object-cover rounded-lg "
-        />
-        <Button
-          href="/auth/login"
-          label="Login"
-          style="w-24 h-10 bg-primary text-secondary rounded font-medium absolute top-5 right-5"
+          className="w-full h-[95vh] object-cover rounded-lg"
         />
       </div>
     </div>
   );
 };
 
-export default SignUpView;
+export default LoginView;

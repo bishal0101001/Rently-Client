@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
 import Footer from "../components/common/Footer/Footer";
@@ -10,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   return (
     <div className={inter.className}>
-      <div className="flex flex-col h-screen w-full items-center justify-center px-1.5">
+      <div className="flex flex-col h-screen w-full items-center justify-center ">
         <div className="flex flex-col items-center justify-center mb-20 ">
           <Logo
             textStyle="flex text-4xl font-bold mb-2 md:text-6xl"
@@ -26,10 +25,10 @@ export default function Home() {
           <Link href="/rentout">
             <div className="flex flex-col justify-center items-center bg-light w-44 h-36 rounded-lg relative md:w-80 md:h-56 md:mr-20">
               <Image
-                src="/icon_home.png"
+                src="/icon_home_neww.png"
                 alt="rent_out"
-                width={280}
-                height={280}
+                width={250}
+                height={250}
                 className="drop-shadow-home absolute -top-10 hover:scale-110"
               />
               <div className="flex justify-between items-center absolute bottom-5">
@@ -73,7 +72,7 @@ export default function Home() {
           <Button
             href="/auth/signup"
             label="Sign up"
-            style="bg-transparent border-2 border-primary text-primary"
+            style="bg-transparent border-2 border-primary text-primary "
           />
 
           {/* <Link href="/auth/signup">
@@ -82,8 +81,10 @@ export default function Home() {
             </button>
           </Link> */}
         </div>
+        <div className="absolute bottom-0 w-full">
+          <Footer />
+        </div>
       </div>
-      <Footer />
     </div>
   );
 }

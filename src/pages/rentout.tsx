@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Navbar from "../components/common/Header/Navbar";
 import CheckBoxInput from "@components/ui/CheckBoxInput";
@@ -8,20 +8,24 @@ import Lottie from "lottie-react";
 import { numericSelectValues } from "../services/selectValuesService";
 
 import { BoxInput, Button, SelectInput, WaveSvg } from "@components/ui";
-import roomAnimation from "../public/assets/roomAnimation.json";
+import roomAnimation from "@assets/roomAnimation.json";
 import { MdEditLocationAlt } from "react-icons/md";
 import { FaLandmark } from "react-icons/fa";
 import { IoMdPricetag } from "react-icons/io";
+import withAuth from "./../hocs/withAuth";
+import { useAuth } from "src/hooks/useAuth";
 
-type Props = {};
+interface Props {
+  animationData?: any;
+}
 
-const rentout = (props: Props) => {
+const Rentout: React.FC<Props> = () => {
   return (
     <div className="flex flex-col">
       <Navbar navItems={"a"} />
       <div className="flex flex-col px-16 items-center justify-center z-50 h-screen">
         <div className="flex justify-between mt-10">
-          <div className="basiss-2/5 basis-1/2 flex flex-col justify-start items-start mr-10">
+          <div className="basis-1/2 flex flex-col justify-start items-start mr-10">
             <h1 className="text-7xl font-extrabold">
               Maximize your rental income with Rently.
             </h1>
@@ -41,7 +45,10 @@ const rentout = (props: Props) => {
               width={500}
               height={500}
             /> */}
-            <Lottie animationData={roomAnimation} loop={true} />
+            {/* <Lottie animationData={roomAnimation} loop={true} /> */}
+            <video autoPlay loop className="w-full rounded">
+              <source src="/assets/animated_room.mp4" />
+            </video>
           </div>
         </div>
       </div>
@@ -133,4 +140,12 @@ const rentout = (props: Props) => {
   );
 };
 
-export default rentout;
+// export const getStaticProps = async () => {
+//   return {
+//     props: {
+//       animationData: roomAnimation,
+//     },
+//   };
+// };
+
+export default withAuth(Rentout);
