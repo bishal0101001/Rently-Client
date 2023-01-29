@@ -1,6 +1,8 @@
+import React, { ButtonHTMLAttributes } from "react";
 import Link from "next/link";
-import React from "react";
+import { IconType } from "react-icons/lib";
 import { twMerge } from "tailwind-merge";
+import { Icon } from "@components/ui";
 
 interface ButtonProps {
   href: string;
@@ -8,6 +10,8 @@ interface ButtonProps {
   style?: string;
   rootStyle?: string;
   onClick?: any;
+  icon?: IconType | null;
+  iconSize?: number;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -16,15 +20,24 @@ const Button: React.FC<ButtonProps> = ({
   label,
   onClick,
   rootStyle,
+  icon = null,
+  iconSize,
 }) => {
   const className = twMerge(
-    `w-24 h-10 bg-primary text-secondary rounded mr-10 font-semibold md:w-28 md:h-10 ${style}`
+    `w-24 h-10 bg-primary text-secondary rounded font-semibold md:w-28 ${style}`
   );
 
   return (
     <Link href={href} className={rootStyle}>
       <button onClick={onClick} type="submit" className={className}>
-        {label}
+        {icon ? (
+          <span className="flex justify-center items-center gap-1">
+            {label}
+            <Icon Icon={icon} size={iconSize} />
+          </span>
+        ) : (
+          label
+        )}
       </button>
     </Link>
   );

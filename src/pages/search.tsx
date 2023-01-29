@@ -11,7 +11,7 @@ const search = (props: Props) => {
     <div className="h-full">
       <Navbar navItems={""} />
       <div className="flex pr-16 pt-20">
-        <div className="basis-1/2 mr-10">
+        <div className="basis-3/5 mr-5">
           <Image
             src="/mapimage.jpg"
             height={500}
@@ -20,8 +20,8 @@ const search = (props: Props) => {
             className="w-full "
           />
         </div>
-        <div className="basis-1/2 flex flex-col items-start">
-          <h1 className="text-3xl font-semibold">Listings near you</h1>
+        <div className="basis-2/5 flex flex-col items-start">
+          <h1 className="text-2xl font-semibold">Listings near you</h1>
           <p className="text-light2">Uploaded 2 days ago</p>
           <div className="flex flex-wrap justify-between items-center">
             <ListingCard />

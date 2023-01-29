@@ -35,8 +35,10 @@ const Navbar: React.FC<NavProps> = ({ navItems }) => {
               <Noty width="24px" count={notifications} />
             )}
           </li>
-          <li>
-            <MdAccountCircle size={25} />
+          <li className="cursor-pointer">
+            <Link href="/myprofile">
+              <MdAccountCircle size={25} />
+            </Link>
           </li>
         </ul>
       </div>

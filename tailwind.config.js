@@ -22,6 +22,7 @@ module.exports = {
         "70vw": "70vw",
       },
       zIndex: {
+        9999: "9999",
         99999: "99999",
       },
     },
@@ -29,7 +30,9 @@ module.exports = {
       primary: "#000",
       secondary: "#fff",
       light: "#EEEEEE",
+      superLight: "#F5F5F5",
       light2: "#AFAFAF",
+      lightText: "#8A8A8A",
       dark: "#4D4D4D",
       inherit: colors.inherit,
       current: colors.current,

@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { useAuth } from "src/hooks/useAuth";
+import useAuth from "@hooks/useAuth";
 
 interface Props {
   isAuthenticated: boolean;

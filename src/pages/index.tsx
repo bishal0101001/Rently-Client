@@ -67,19 +67,13 @@ export default function Home() {
             </div>
           </Link>
         </div>
-        <div className="flex justify-evenly items-center mb-10">
+        <div className="flex justify-between items-center mb-10 gap-10">
           <Button href="/auth/login" label="Login" />
           <Button
             href="/auth/signup"
             label="Sign up"
-            style="bg-transparent border-2 border-primary text-primary "
+            style="bg-transparent border-2 border-primary text-primary"
           />
-
-          {/* <Link href="/auth/signup">
-            <button className="w-24 h-10 border-2 border-primary rounded-lg font-semibold md:w-28 md:h-10">
-              Sign up
-            </button>
-          </Link> */}
         </div>
         <div className="absolute bottom-0 w-full">
           <Footer />

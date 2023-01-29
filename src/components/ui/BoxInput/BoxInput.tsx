@@ -1,37 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 interface InputProps {
   placeholder?: string;
   type?: string;
-  htmlFor: string;
   label: string;
   Icon?: any;
+  iconColor?: string;
+  rootStyle?: string;
+  labelStyle?: string;
+  inputStyle?: string;
+  inputWrapperStyle?: string;
+  val?: string;
+  disabled?: boolean;
+  onChange?: (value: string) => void;
 }
 
 const BoxInput: React.FC<InputProps> = ({
   placeholder,
   label,
   type = "text",
-  htmlFor,
   Icon,
+  iconColor,
+  rootStyle,
+  labelStyle,
+  inputStyle,
+  inputWrapperStyle,
+  val,
+  disabled = false,
+  onChange,
 }) => {
+  const rootClassName = twMerge(`mb-6 ${rootStyle}`);
+  const labelClassName = twMerge(
+    `block mb-2 text-sm font-medium text-secondary ${labelStyle}`
+  );
+  const inputClassName = twMerge(
+    `bg-dark text-light text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 outline-none ${inputStyle}`
+  );
+  const inputWrapperClassName = twMerge(
+    `flex items-center justify-between w-full p-2.5 bg-dark text-light text-sm rounded ${inputWrapperStyle}`
+  );
+
+  const [value, setValue] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+    if (onChange) {
+      onChange(e.target.value);
+    }
+  };
+
   return (
-    <div className="mb-6">
-      <label
-        htmlFor={htmlFor}
-        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-      >
+    <div className={rootClassName}>
+      <label htmlFor={label} className={labelClassName}>
         {label}
       </label>
-      <span className="flex items-center justify-between w-full p-2.5 bg-dark text-light text-sm rounded-lg">
+      <span className={inputWrapperClassName}>
         <input
           type={type}
-          id={htmlFor}
-          className="bg-dark text-light text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 outline-none"
+          id={label}
+          className={inputClassName}
           placeholder={placeholder}
+          value={disabled ? val : value}
+          onChange={handleChange}
+          disabled={disabled}
           required
         />
-        {Icon && <Icon size={25} />}
+        {Icon && <Icon size={25} color={iconColor} />}
       </span>
     </div>
   );

@@ -17,10 +17,10 @@ const CheckBoxInput: React.FC<Props> = ({
   rootStyle,
 }) => {
   const rootClassName = twMerge(
-    `w-full  bg-dark rounded-lg mt-0.5 ${rootStyle}`
+    `w-full bg-dark rounded-lg mt-0.5 ${rootStyle}`
   );
   const inputClassName = twMerge(
-    `w-5 h-5 text-blue-600 bg-dark focus:ring-blue-500  ${inputStyle}`
+    `w-5 h-5 text-blue-600 bg-dark focus:ring-blue-500 cursor-pointer  ${inputStyle}`
   );
   const labelClassName = twMerge(
     `w-full py-3 ml-2 text-sm font-medium text-light ${labelStyle}`

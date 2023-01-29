@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import Navbar from "../components/common/Header/Navbar";
 import CheckBoxInput from "@components/ui/CheckBoxInput";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import Image from "next/image";
-import Lottie from "lottie-react";
+// import Lottie from "lottie-react";
 import { numericSelectValues } from "../services/selectValuesService";
 
 import { BoxInput, Button, SelectInput, WaveSvg } from "@components/ui";
@@ -12,33 +12,44 @@ import roomAnimation from "@assets/roomAnimation.json";
 import { MdEditLocationAlt } from "react-icons/md";
 import { FaLandmark } from "react-icons/fa";
 import { IoMdPricetag } from "react-icons/io";
+import { BsUpload } from "react-icons/bs";
 import withAuth from "./../hocs/withAuth";
-import { useAuth } from "src/hooks/useAuth";
+import useAuth from "@hooks/useAuth";
+import Footer from "@components/common/Footer/Footer";
 
 interface Props {
   animationData?: any;
 }
 
 const Rentout: React.FC<Props> = () => {
+  const [videoSrc, setVideoSrc] = useState("");
+
+  const handleScroll = () => {
+    window.scrollTo({ top: window.innerHeight * 0.8, behavior: "smooth" });
+  };
   return (
     <div className="flex flex-col">
       <Navbar navItems={"a"} />
-      <div className="flex flex-col px-16 items-center justify-center z-50 h-screen">
-        <div className="flex justify-between mt-10">
-          <div className="basis-1/2 flex flex-col justify-start items-start mr-10">
-            <h1 className="text-7xl font-extrabold">
+      <div className="flex flex-col px-16 items-center justify-center h-screen">
+        <div className="flex justify-between mt-10 ">
+          <div className="basis-1/2 flex flex-col justify-start items-start mr-10 z-[9999]">
+            <h1 className="text-7xl font-extrabold cursor-pointer">
               Maximize your rental income with Rently.
             </h1>
             <p className="text-dark text-xl my-5 w-2/3">
               Effortlessly Rent Out Your Rooms and Enjoy a Hassle-Free Rental
               Experience
             </p>
-            <button className="flex items-center justify-center h-10 px-10 py-6 bg-primary text-secondary rounded-full font-semibold mt-5">
-              <span className="mr-2">Get Started</span>
-              <HiArrowNarrowRight size={25} />
+            <button
+              type="button"
+              className="flex items-center justify-center h-10 px-10 py-6 bg-primary text-secondary rounded-full font-semibold mt-5 ease-in-out delay-100 transition-all hover:scale-110"
+              onClick={handleScroll}
+            >
+              <span className="mr-2 ">Get Started</span>
+              <HiArrowNarrowRight size={25} className="hover:scale-110" />
             </button>
           </div>
-          <div className="basis-1/2">
+          <div className="basis-1/2 ">
             {/* <Image
               src="/assets/house_model.png"
               alt="img"
@@ -53,18 +64,16 @@ const Rentout: React.FC<Props> = () => {
         </div>
       </div>
       <WaveSvg />
-      <div className="flex justify-between bg-primary h-auto text-secondary pl-16 z-50">
-        <div className="basis-1/2 px-5 mx-auto">
+      <div className="flex justify-between bg-primary h-[800px] text-secondary pl-16 z-50">
+        <div className="basis-1/2 px-5 mx-auto h-fit">
           <h1 className="text-3xl font-bold mb-5">Add Details</h1>
           <BoxInput
             label="Location"
-            htmlFor="location"
             placeholder="Enter details or drag the pointer"
             Icon={MdEditLocationAlt}
           />
           <BoxInput
             label="Nearest landmark"
-            htmlFor="location"
             Icon={FaLandmark}
             placeholder="E.g: Pokhara Engineering College"
           />
@@ -114,9 +123,13 @@ const Rentout: React.FC<Props> = () => {
           />
           <BoxInput
             label="Price"
-            htmlFor="price"
             Icon={IoMdPricetag}
             placeholder="Enter price"
+          />
+          <BoxInput
+            label="Upload"
+            Icon={BsUpload}
+            placeholder="Upload images"
           />
           <Button
             href="#"
@@ -125,17 +138,18 @@ const Rentout: React.FC<Props> = () => {
             rootStyle="w-full mt-6"
           />
         </div>
-        <div className="basis-1/2 mx-auto">
+        <div className="basis-1/2 mx-auto overflow-hidden mb-10">
           <h1 className="text-3xl font-bold mx-auto mb-5">Drag the pointer</h1>
           <Image
             src="/mapimage.jpg"
             height={500}
             width={500}
             alt="map"
-            className="w-full h-full rounded-tl-lg"
+            className="w-fit h-auto rounded-tl-lg"
           />
         </div>
       </div>
+      <Footer rootStyle="bg-secondary" style="text-primary" />
     </div>
   );
 };

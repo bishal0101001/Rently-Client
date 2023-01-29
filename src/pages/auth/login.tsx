@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { Logo, Input } from "@components/ui";
-import { useAuth } from "src/hooks/useAuth";
+import useAuth from "@hooks/useAuth";
+import { login, selectUser } from "src/slices/userSlice";
+import { RootState } from "src/store";
 
 interface Props {}
 
@@ -12,14 +16,33 @@ const LoginView: React.FC<Props> = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { login } = useAuth();
+  const router = useRouter();
 
-  const handleSignup = (e: React.SyntheticEvent<EventTarget>) => {
+  const { isAuthenticated } = useSelector(selectUser);
+  const dispatch = useDispatch();
+
+  // const { login } = useAuth();
+
+  const handleLogin = (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault();
 
-    login("Bishal", email, "1234-431-1234");
+    dispatch(
+      login({
+        id: "1",
+        name: "Bishal Shrestha",
+        email,
+        phone: 123123,
+        address: "Srijana Chowk",
+      })
+    );
+
+    // login("Bishal", email, "1234-431-1234");
     console.log(email, "email");
   };
+
+  if (isAuthenticated) {
+    router.push("/");
+  }
   return (
     <div className="flex items-center justify-center h-screen w-full px-5 mt-3 md:justify-between md:px-20">
       <div className="w-[90vw] h-full mr-5">
@@ -29,7 +52,7 @@ const LoginView: React.FC<Props> = () => {
         <div className="flex flex-col items-center basis-1/4 h-screen w-full md:items-start">
           <form
             className="flex flex-col w-[90vw] md:w-96 md:ml-10 "
-            onSubmit={handleSignup}
+            onSubmit={handleLogin}
           >
             <h1 className="text-xl font-bold md:text-2xl">Welcome back,</h1>
             <p className="text-dark text-sm mb-5 md:text-base">
