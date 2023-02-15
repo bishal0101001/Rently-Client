@@ -1,84 +1,61 @@
-import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Inter } from "@next/font/google";
-import Footer from "../components/common/Footer/Footer";
-import Link from "next/link";
-import { Logo, Button } from "@components/ui";
+
+import { HomeNotAuthenticated, HomeAuthenticated } from "@components/common";
+import { login, logout, selectUser } from "./../slices/userSlice";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "src/config/firebase";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// interface Props {
+//   config: object;
+// }
+
 export default function Home() {
+  const { isAuthenticated } = useSelector(selectUser);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      currentUser
+        ? dispatch(
+            login({
+              id: currentUser.uid,
+              name: currentUser.displayName,
+              email: currentUser.email,
+              phone: currentUser.phoneNumber,
+              address: "Srijana Chowk",
+              //@ts-ignore
+              token: currentUser.accessToken,
+            })
+          )
+        : dispatch(logout());
+    });
+    return unsubscribe;
+  }, []);
+
   return (
     <div className={inter.className}>
-      <div className="flex flex-col h-screen w-full items-center justify-center ">
-        <div className="flex flex-col items-center justify-center mb-20 ">
-          <Logo
-            textStyle="flex text-4xl font-bold mb-2 md:text-6xl"
-            imgStyle="w-10 h-10 md:w-16 md:h-16"
-          />
-          <span className="text-sm text-dark md:text-2xl">
-            {/* Your home away from home */}
-            {/* The hassel-free way to find your next home */}
-            Your One-Stop Rental Solution
-          </span>
-        </div>
-        <div className="flex w-full justify-evenly items-center md:justify-center mb-10">
-          <Link href="/rentout">
-            <div className="flex flex-col justify-center items-center bg-light w-44 h-36 rounded-lg relative md:w-80 md:h-56 md:mr-20">
-              <Image
-                src="/icon_home_neww.png"
-                alt="rent_out"
-                width={250}
-                height={250}
-                className="drop-shadow-home absolute -top-10 hover:scale-110"
-              />
-              <div className="flex justify-between items-center absolute bottom-5">
-                <h1 className="font-semibold mr-2 text-lg">Rent out</h1>
-                <span className="w-8 h-8 md:w-12 md:h-12">
-                  <Image
-                    src="/arrow_right.svg"
-                    height={400}
-                    width={400}
-                    alt="arrow"
-                  />
-                </span>
-              </div>
-            </div>
-          </Link>
-          <Link href="/search">
-            <div className="flex flex-col justify-center items-center bg-light w-44 h-36 rounded-lg relative  md:w-80 md:h-56 ">
-              <Image
-                src="/icon_search.png"
-                alt="rent_out"
-                width={250}
-                height={250}
-                className="drop-shadow-xl absolute -top-10 hover:scale-110 delay-200 ease-in-out"
-              />
-              <div className="flex justify-between items-center absolute bottom-5">
-                <h1 className="font-semibold mr-2 text-lg">Find a room</h1>
-                <span className="w-8 h-8 md:w-12 md:h-12">
-                  <Image
-                    src="/arrow_right.svg"
-                    height={400}
-                    width={400}
-                    alt="arrow"
-                  />
-                </span>
-              </div>
-            </div>
-          </Link>
-        </div>
-        <div className="flex justify-between items-center mb-10 gap-10">
-          <Button href="/auth/login" label="Login" />
-          <Button
-            href="/auth/signup"
-            label="Sign up"
-            style="bg-transparent border-2 border-primary text-primary"
-          />
-        </div>
-        <div className="absolute bottom-0 w-full">
-          <Footer />
-        </div>
-      </div>
+      {isAuthenticated ? <HomeAuthenticated /> : <HomeNotAuthenticated />}
     </div>
   );
 }
+
+// export const getServerSideProps = async () => {
+//   const firebaseConfig = {
+//     apiKey: process.env.FIREBASE_API_KEY,
+//     authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+//     projectId: process.env.FIREBASE_PROJECT_ID,
+//     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+//     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+//     appId: process.env.FIREBASE_APP_ID,
+//     measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+//   };
+//   return {
+//     props: {
+//       config: firebaseConfig,
+//     },
+//   };
+// };

@@ -4,10 +4,11 @@ import { RootState } from "src/store";
 
 interface userDetails {
   id: string;
-  name: string;
-  email: string;
-  phone: number;
-  address: string;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+  token: string | null;
 }
 
 export interface userSlice {
@@ -28,11 +29,15 @@ export const userSlice = createSlice({
       state.userDetails = { ...state.userDetails, ...action.payload };
       state.isAuthenticated = state.userDetails ? true : false;
     },
+    logout: (state) => {
+      state.userDetails = null;
+      state.isAuthenticated = false;
+    },
   },
 });
 
 export const selectUser = (state: RootState) => state.user;
 
-export const { login } = userSlice.actions;
+export const { login, logout } = userSlice.actions;
 
 export default userSlice.reducer;

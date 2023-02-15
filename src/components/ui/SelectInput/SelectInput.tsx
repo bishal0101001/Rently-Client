@@ -35,7 +35,7 @@ const SelectInput: React.FC<InputProps> = ({
       </label>
       <span className="flex w-full p-2.5 bg-dark text-light text-sm rounded-lg">
         <select id="countries" className={selectClassName}>
-          <option selected value={selected}>
+          <option value={selected}>
             {selected}
           </option>
           {options.map((i) => (

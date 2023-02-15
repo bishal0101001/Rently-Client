@@ -18,7 +18,7 @@ const myprofile = (props: Props) => {
   };
   return (
     <div>
-      <Navbar navItems={""} />
+      <Navbar />
       <div className="flex flex-col items-start mx-16 pt-20">
         <h1 className="text-2xl font-bold mx-auto mb-5">My Profile</h1>
         {/* <Line style="border-light2 my-5" /> */}

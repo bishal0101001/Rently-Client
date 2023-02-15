@@ -30,7 +30,7 @@ const ListingItems = (props: Props) => {
         </div>
         <div className="flex items-center justify-between">
           <p className="text-lightText text-lg">3 days ago | Rs 5000</p>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <Button
               href="#"
               label="Details"

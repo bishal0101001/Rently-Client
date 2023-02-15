@@ -18,13 +18,7 @@ export const commentDetails = [
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto autem tenetur beatae",
   },
   {
-    name: "Jinish Nayek",
-    img: "/profile.jpg",
-    comment:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto autem tenetur beatae",
-  },
-  {
-    name: "Jinish Nayek",
+    name: "Mohan Shah",
     img: "/profile.jpg",
     comment:
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto autem tenetur beatae",

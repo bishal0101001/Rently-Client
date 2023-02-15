@@ -14,22 +14,26 @@ import { FaLandmark } from "react-icons/fa";
 import { IoMdPricetag } from "react-icons/io";
 import { BsUpload } from "react-icons/bs";
 import withAuth from "./../hocs/withAuth";
-import useAuth from "@hooks/useAuth";
 import Footer from "@components/common/Footer/Footer";
+import { useSelector } from "react-redux";
+import { selectUser } from "src/slices/userSlice";
+import Loading from "@components/common/Loading";
 
 interface Props {
   animationData?: any;
 }
 
 const Rentout: React.FC<Props> = () => {
-  const [videoSrc, setVideoSrc] = useState("");
-
   const handleScroll = () => {
     window.scrollTo({ top: window.innerHeight * 0.8, behavior: "smooth" });
   };
+
+  const { isAuthenticated } = useSelector(selectUser);
+
+  if (!isAuthenticated) return <Loading />;
   return (
     <div className="flex flex-col">
-      <Navbar navItems={"a"} />
+      <Navbar />
       <div className="flex flex-col px-16 items-center justify-center h-screen">
         <div className="flex justify-between mt-10 ">
           <div className="basis-1/2 flex flex-col justify-start items-start mr-10 z-[9999]">
@@ -132,7 +136,7 @@ const Rentout: React.FC<Props> = () => {
             placeholder="Upload images"
           />
           <Button
-            href="#"
+            href="/mylistings"
             label="Submit"
             style="text-primary bg-secondary !w-full"
             rootStyle="w-full mt-6"

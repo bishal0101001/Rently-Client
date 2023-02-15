@@ -15,7 +15,7 @@ interface Props {}
 const listingdetails = (props: Props) => {
   return (
     <div className="flex flex-col ">
-      <Navbar navItems={""} />
+      <Navbar />
       <div className="pt-14 w-auto h-full mx-16">
         {/* <ImageSlider /> */}
         <div className="w-auto h-[80vh] drop-shadow-2xl">
@@ -64,7 +64,7 @@ const listingdetails = (props: Props) => {
               className="rounded-full w-24 h-24 object-cover"
             />
             <h1 className="font-semibold text-3xl w-3/5">
-              Apartment Hosted by Sujit Sherchan
+              Apartment Hosted by Sujit Gauchan
             </h1>
           </div>
           <p>
@@ -81,7 +81,7 @@ const listingdetails = (props: Props) => {
         <div className="flex justify-between items-stretch gap-4 w-full h-[460px] mb-10">
           <div className="basis-3/5 flex flex-col relative">
             <h1 className="text-2xl font-semibold mb-2">Comments</h1>
-            <div className="flex flex-col gap-6 overflow-y-scroll">
+            <div className="flex flex-col gap-6 overflow-y-scroll py-4">
               {commentDetails?.map((c) => (
                 <Comments img={c.img} name={c.name} comment={c.comment} />
               ))}

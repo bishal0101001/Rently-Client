@@ -16,21 +16,22 @@ interface Props {
 }
 
 const Carousel: React.FC<Props> = ({ src }) => {
+  const SLIDE_DELAY = 4000;
   const [index, setIndex] = useState(0);
   const [delay, setDelay] = useState(3000);
 
   const increaseIndex = () => {
-    setDelay(4000);
+    setDelay(SLIDE_DELAY);
     setIndex(index === src.length - 1 ? 0 : index + 1);
   };
 
   const decreaseIndex = () => {
-    setDelay(4000);
+    setDelay(SLIDE_DELAY);
     setIndex(index === 0 ? src.length - 1 : index - 1);
   };
 
   const handleIndex = (index: number) => {
-    setDelay(4000);
+    setDelay(SLIDE_DELAY);
     setIndex(index);
   };
 
