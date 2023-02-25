@@ -14,6 +14,8 @@ interface InputProps {
   val?: string;
   disabled?: boolean;
   onChange?: (value: string) => void;
+  isRequired?: boolean;
+  children?: JSX.Element;
 }
 
 const BoxInput: React.FC<InputProps> = ({
@@ -29,6 +31,8 @@ const BoxInput: React.FC<InputProps> = ({
   val,
   disabled = false,
   onChange,
+  isRequired = true,
+  children,
 }) => {
   const rootClassName = twMerge(`mb-6 ${rootStyle}`);
   const labelClassName = twMerge(
@@ -56,16 +60,20 @@ const BoxInput: React.FC<InputProps> = ({
         {label}
       </label>
       <span className={inputWrapperClassName}>
-        <input
-          type={type}
-          id={label}
-          className={inputClassName}
-          placeholder={placeholder}
-          value={disabled ? val : value}
-          onChange={handleChange}
-          disabled={disabled}
-          required
-        />
+        {children ? (
+          children
+        ) : (
+          <input
+            type={type}
+            id={label}
+            className={inputClassName}
+            placeholder={placeholder}
+            value={disabled ? val : value}
+            onChange={handleChange}
+            disabled={disabled}
+            required={isRequired}
+          />
+        )}
         {Icon && <Icon size={25} color={iconColor} />}
       </span>
     </div>

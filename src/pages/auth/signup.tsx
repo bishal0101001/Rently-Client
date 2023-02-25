@@ -10,6 +10,7 @@ import { FirebaseError } from "firebase/app";
 import { formatFirebaseError } from "src/utils/formatFirebaseError";
 import { FaGalacticSenate } from "react-icons/fa";
 import { Loading } from "@components/common";
+import { addUser } from "src/config/db";
 
 interface Props {}
 interface errorProps {}
@@ -46,14 +47,20 @@ const SignUpView: FC<Props> = () => {
       dispatch(
         login({
           id: user.uid,
-          name: user.displayName,
+          name,
           email: user.email,
-          phone: user.phoneNumber,
+          phone,
           address: "Srijana Chowk",
           //@ts-ignore
           token: user.accessToken,
         })
       );
+
+      const userAdded =
+        user.email &&
+        addUser({ id: user.uid, name, email: user.email, phone, address: "" });
+
+      console.log(userAdded, "userAdded");
 
       setLoading(false);
     } catch (error) {
@@ -82,7 +89,7 @@ const SignUpView: FC<Props> = () => {
   };
 
   if (isAuthenticated) {
-    router.push("/");
+    router.push("/", undefined, { shallow: true });
   }
 
   return (

@@ -11,6 +11,8 @@ import {
   signInWithPhoneNumber,
 } from "firebase/auth";
 
+import { getStorage } from "firebase/storage";
+
 // interface Args {
 //   email: string;
 //   password: string;
@@ -39,6 +41,9 @@ const doSignIn = (email: string, password: string): Promise<UserCredential> =>
 const doSignInWithPopup = () => signInWithPopup(auth, provider);
 
 const doSignOut = () => signOut(auth);
+
+
+export const storage = getStorage(app);
 
 export { auth, createUser, doSignIn, doSignOut, doSignInWithPopup };
 

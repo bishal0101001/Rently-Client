@@ -1,6 +1,6 @@
 export enum ListingCategories {
-  "Room",
-  "Flat",
-  "Apartment",
-  "House",
+  ROOM = "Room",
+  FLAT = "Flat",
+  APARTMENT = "Apartment",
+  HOUSE = "House",
 }

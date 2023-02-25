@@ -7,6 +7,8 @@ interface Props {
   inputStyle?: string;
   labelStyle?: string;
   rootStyle?: string;
+  isChecked: boolean;
+  handleChange: () => void;
 }
 
 const CheckBoxInput: React.FC<Props> = ({
@@ -15,10 +17,10 @@ const CheckBoxInput: React.FC<Props> = ({
   inputStyle,
   labelStyle,
   rootStyle,
+  isChecked,
+  handleChange,
 }) => {
-  const rootClassName = twMerge(
-    `w-full bg-dark rounded-lg mt-0.5 ${rootStyle}`
-  );
+  const rootClassName = twMerge(`w-full bg-dark rounded mt-0.5 ${rootStyle}`);
   const inputClassName = twMerge(
     `w-5 h-5 text-blue-600 bg-dark focus:ring-blue-500 cursor-pointer  ${inputStyle}`
   );
@@ -28,7 +30,13 @@ const CheckBoxInput: React.FC<Props> = ({
   return (
     <div className={rootClassName}>
       <div className="flex items-center pl-3 py-px">
-        <input id={id} type="checkbox" value="" className={inputClassName} />
+        <input
+          id={id}
+          type="checkbox"
+          checked={isChecked}
+          className={inputClassName}
+          onChange={handleChange}
+        />
         <label htmlFor={id} className={labelClassName}>
           {label}
         </label>

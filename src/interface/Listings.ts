@@ -1,34 +1,32 @@
 import { ListingCategories } from "src/enums/listingCategoryEnums";
 
 export interface Listing {
-  id: string;
+  id?: string;
   userId: string;
   title: string;
   address: {
-    location: {
-      lat: number;
-      long: number;
-    };
+    position: google.maps.LatLngLiteral;
     title: string;
   };
   description: string;
   nearbyLandmark: string;
-  price: number;
-  lastUpdated: string;
-  img: string;
+  price: string;
+  createdAt?: string;
+  lastUpdated?: string;
+  img: string[];
   reserved: boolean;
   details: {
     bed: number;
     bath: number;
+    attachedBath: boolean;
     wifi: boolean;
     parking: boolean;
     floor: number;
   };
   category: ListingCategories;
-  comments: {
+  comments?: {
     id: string;
     userId: string;
     comment: string;
   }[];
 }
-[];

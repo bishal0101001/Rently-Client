@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      rotate: {
+        60: "60deg",
+      },
       borderWidth: {
         DEFAULT: "1px",
       },
@@ -25,6 +28,51 @@ module.exports = {
         9999: "9999",
         99999: "99999",
         999999: "999999",
+      },
+      keyframes: {
+        // spin: {
+        //   "0%": {
+        //     transform: "rotate(0deg)",
+        //   },
+        //   "100%": {
+        //     transform: "rotate(360deg)",
+        //   },
+        // },
+        // pulse: {
+        //   "0%, 100%": {
+        //     transform: "scale(1)",
+        //   },
+        //   "50%": {
+        //     transform: "scale(1.1)",
+        //   },
+        // },
+        // bounce: {
+        //   "0%, 100%": {
+        //     transform: "translateY(0)",
+        //   },
+        //   "50%": {
+        //     transform: "translateY(-0.5rem)",
+        //   },
+        // },
+        spinpulse: {
+          "0%": { transform: "rotate(0.0deg)" },
+          "10%": { transform: "rotate(120deg)" },
+          "20%": { transform: "rotate(240deg)" },
+          "30%": { transform: "rotate(360deg)" },
+          "40%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.1)" },
+          "60%": { transform: "scale(1)" },
+          "70%": { transform: "scale(1.1)" },
+          "80%": { transform: "scale(1)" },
+          "90%": { transform: "scale(1.1)" },
+          "100%": { transform: "scale(1)" },
+        },
+      },
+      animation: {
+        "animate-spin-slow": "spin 6s linear infinite",
+        "animate-pulse-slow": "pulse 6s ease-in-out infinite",
+        "animate-bounce-slow": "bounce 1.5s ease-in-out infinite",
+        home: "spinpulse 4s linear infinite",
       },
     },
     colors: ({ colors }) => ({

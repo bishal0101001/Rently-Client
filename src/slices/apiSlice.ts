@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { ListingCategories } from "src/enums/listingCategoryEnums";
 import { Listing } from "src/interface/Listings";
-import { db, getListings } from "src/config/db";
+import { addListing, db, getListings, getListingsById } from "src/config/db";
 
 interface User {
   id: string;
@@ -18,28 +18,9 @@ interface User {
   phone: string;
 }
 
-interface listingResponse {
+interface ListingResponse {
   listings: Listing[];
 }
-
-// interface Listing {
-//   id: string;
-//   title: string;
-//   location: string;
-//   nearbyLandmark: string;
-//   details: {
-//     bed: number;
-//     bath: number;
-//     wifi: boolean;
-//     parking: boolean;
-//   };
-//   category: ListingCategories;
-//   comments: {
-//     id: string;
-//     userId: string;
-//     comment: string;
-//   }[];
-// }
 
 export const userApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/api" }),
@@ -54,25 +35,44 @@ export const listingsApi = createApi({
   reducerPath: "listingsApi",
   baseQuery: fetchBaseQuery(),
   endpoints: (builder) => ({
-    getListing: builder.query<listingResponse, void>({
+    getListings: builder.query<ListingResponse, void>({
       //@ts-ignore
-      async queryFn() {
-        const querySnapshot = await getListings();
-        let data: DocumentData[] = [];
-        querySnapshot.forEach((doc) => {
-          data.push(doc.data());
-        });
-        return { data: { listings: data } };
+      queryFn: async () => {
+        const listings = await getListings();
+
+        return { data: { listings } };
       },
+      //@ts-ignore
+      providesTags: (result) =>
+        result
+          ? result.listings.map(({ id }) => ({ type: "Listings", id }))
+          : [{ type: "Listings" }],
     }),
-    addListing: builder.mutation<listingResponse, string>({
+    getListingsById: builder.query<Listing, string>({
       //@ts-ignore
-      async queryFn(data) {
-        console.log({ data });
+      queryFn: async (id) => {
+        const listing = await getListingsById(id);
+        return { data: listing };
       },
+      //@ts-ignore
+      providesTags: (result, error, id) => [{ type: "Listings", id }],
+    }),
+    addListing: builder.mutation<Listing, Omit<Listing, "id">>({
+      //@ts-ignore
+      queryFn: async (newListing) => {
+        console.log(newListing, "new listing to be added");
+        const docRef = await addListing(newListing);
+        return { data: { id: docRef.id, ...newListing } };
+      },
+      //@ts-ignore
+      invalidatesTags: [{ type: "Listings" }],
     }),
   }),
 });
 
 export const { useGetCurrentUserQuery } = userApi;
-export const { useGetListingQuery } = listingsApi;
+export const {
+  useGetListingsQuery,
+  useGetListingsByIdQuery,
+  useAddListingMutation,
+} = listingsApi;

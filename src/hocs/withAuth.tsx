@@ -16,7 +16,7 @@ const withAuth = <T extends object>(
     const { isAuthenticated } = useSelector(selectUser);
 
     if (!isAuthenticated) {
-      router.push("/auth/login");
+      router.push("/auth/login", undefined, { shallow: true });
     }
 
     return <WrappedComponent {...props} />;

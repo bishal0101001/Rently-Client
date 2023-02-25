@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { twMerge } from "tailwind-merge";
-import clsx from "clsx";
+import { SiHomebridge } from "react-icons/si";
 
 interface LogoProps {
   textStyle?: string;
@@ -14,9 +14,10 @@ const Logo: React.FC<LogoProps> = ({ textStyle, imgStyle }) => {
   );
   const imgClassName = twMerge(`w-6 h-6 md:w-10 md:h-10 ${imgStyle}`);
   return (
-    <Link href="/" className="w-auto">
+    <Link href="/" className="w-auto ">
       <h1 className={textClassName}>
         <span>
+          {/* <SiHomebridge className={imgClassName} color="black" /> */}
           <img src="/logo.png" alt="logo" className={imgClassName} />
         </span>
         Rently

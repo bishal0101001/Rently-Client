@@ -4,6 +4,8 @@ import { MdEmail, MdEditLocationAlt } from "react-icons/md";
 
 import { Navbar, Line } from "@components/common";
 import { BoxInput, Button } from "@components/ui";
+import { useSelector } from "react-redux";
+import { selectUser } from "./../slices/userSlice";
 
 type Props = {};
 
@@ -12,6 +14,8 @@ const myprofile = (props: Props) => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+
+  const { userDetails, isAuthenticated } = useSelector(selectUser);
 
   const handleSave = (e: React.FormEvent) => {
     console.log(e);
@@ -54,7 +58,7 @@ const myprofile = (props: Props) => {
               labelStyle="text-primary"
               Icon={MdEmail}
               iconColor="black"
-              val="bishal69shrestha@gmail.com"
+              val={userDetails!.email}
               disabled={true}
             />
             <BoxInput
@@ -65,7 +69,7 @@ const myprofile = (props: Props) => {
               labelStyle="text-primary"
               Icon={FaPhoneAlt}
               iconColor="black"
-              val="9867642901"
+              val={userDetails?.phone}
               disabled={true}
             />
             <BoxInput

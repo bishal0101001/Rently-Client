@@ -5,9 +5,10 @@ import Footer from "@components/common/Footer/Footer";
 import ListingCard from "@components/common/ListingCard";
 import { useSelector } from "react-redux";
 import { selectUser } from "src/slices/userSlice";
-import { Loading } from "@components/common";
-import {  useGetListingQuery } from "src/slices/apiSlice";
+import { Loading, Map } from "@components/common";
+import { useGetListingsQuery } from "src/slices/apiSlice";
 import { Listing } from "src/interface/Listings";
+import { MarkerType } from "@components/common/Map";
 
 interface Props {
   data: {
@@ -18,12 +19,24 @@ interface Props {
 
 const search = (props: Props) => {
   // const { isAuthenticated } = useSelector(selectUser);
-  const { data, error, isLoading } = useGetListingQuery();
+  const { data, error, isLoading } = useGetListingsQuery();
 
-  useEffect(() => {
-    // logData();
-    console.log("logged data....");
-  }, []);
+  const markers: MarkerType[] = [
+    { id: "1", position: { lat: 28.2109865, lng: 83.9766963 } },
+    { id: "2", position: { lat: 28.2115223, lng: 83.9565756 } },
+    { id: "3", position: { lat: 28.22329287810507, lng: 83.98665410549233 } },
+    { id: "4", position: { lat: 28.2232928, lng: 83.9866541059233 } },
+    { id: "5", position: { lat: 28.2232928707, lng: 83.9866541049233 } },
+    { id: "6", position: { lat: 28.22329210507, lng: 83.98665410549233 } },
+    { id: "7", position: { lat: 28.223297810507, lng: 83.9866549233 } },
+    { id: "8", position: { lat: 28.223297810507, lng: 83.965410549233 } },
+    { id: "9", position: { lat: 28.22329280507, lng: 83.98665410549233 } },
+    { id: "10", position: { lat: 28.223210507, lng: 83.98665410549233 } },
+    { id: "11", position: { lat: 28.2329287810507, lng: 83.8665410549233 } },
+    { id: "12", position: { lat: 28.229287810507, lng: 83.98665410549233 } },
+    { id: "13", position: { lat: 28.22329287810507, lng: 83.98665449233 } },
+    { id: "14", position: { lat: 28.229287810507, lng: 83.9866541233 } },
+  ];
 
   return (
     <>
@@ -32,13 +45,7 @@ const search = (props: Props) => {
         <Navbar isSearch={true} />
         <div className="flex pt-20">
           <div className="basis-2/6 mr-5 h-[80vh]">
-            <Image
-              src="/mapimage.jpg"
-              height={500}
-              width={500}
-              alt="map"
-              className="w-full h-full object-cover"
-            />
+            <Map  listings={data?.listings}/>
           </div>
           <div className="basis-4/6 flex flex-col items-start h-[80vh] overflow-y-auto pr-10 md:pr-12">
             <h1 className="text-2xl font-semibold">Listings near you</h1>
@@ -47,12 +54,12 @@ const search = (props: Props) => {
               {data?.listings?.map((i) => (
                 <div key={i?.id}>
                   <ListingCard
-                    id={i?.id}
+                    id={i!.id}
                     price={i?.price}
                     address={i?.address}
                     nearestLandmark={i?.nearbyLandmark}
-                    img={i?.img}
-                    saved={parseInt(i?.id) % 2 === 0 ? true : false}
+                    img={i?.img[0]}
+                    saved={2 % 2 === 0 ? true : false}
                   />
                 </div>
               ))}
@@ -64,16 +71,5 @@ const search = (props: Props) => {
     </>
   );
 };
-
-// export const getStaticProps = async () => {
-
-//   return {
-//     props: {
-//       data,
-//       error,
-//       isLoading,
-//     },
-//   };
-// };
 
 export default search;

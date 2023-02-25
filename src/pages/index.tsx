@@ -3,7 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Inter } from "@next/font/google";
 
 import { HomeNotAuthenticated, HomeAuthenticated } from "@components/common";
-import { login, logout, selectUser } from "./../slices/userSlice";
+import {
+  login,
+  logout,
+  selectUser,
+  setCurrentLocation,
+} from "./../slices/userSlice";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "src/config/firebase";
 
@@ -14,24 +19,36 @@ const inter = Inter({ subsets: ["latin"] });
 // }
 
 export default function Home() {
-  const { isAuthenticated } = useSelector(selectUser);
+  const { isAuthenticated, userDetails } = useSelector(selectUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      currentUser
-        ? dispatch(
-            login({
-              id: currentUser.uid,
-              name: currentUser.displayName,
-              email: currentUser.email,
-              phone: currentUser.phoneNumber,
-              address: "Srijana Chowk",
-              //@ts-ignore
-              token: currentUser.accessToken,
-            })
-          )
-        : dispatch(logout());
+      if (currentUser) {
+        dispatch(
+          login({
+            id: currentUser.uid,
+            name: currentUser?.displayName,
+            email: currentUser.email,
+            phone: currentUser!.phoneNumber,
+            address: "Srijana Chowk",
+            //@ts-ignore
+            token: currentUser.accessToken,
+          })
+        );
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            console.log(position, "position");
+            const address: google.maps.LatLngLiteral = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            dispatch(setCurrentLocation(address));
+          });
+        }
+      } else {
+        dispatch(logout());
+      }
     });
     return unsubscribe;
   }, []);

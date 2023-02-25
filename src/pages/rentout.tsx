@@ -1,169 +1,416 @@
 import React, { useEffect, useState, useRef } from "react";
-
-import Navbar from "../components/common/Header/Navbar";
-import CheckBoxInput from "@components/ui/CheckBoxInput";
-import { HiArrowNarrowRight } from "react-icons/hi";
 import Image from "next/image";
-// import Lottie from "lottie-react";
-import { numericSelectValues } from "../services/selectValuesService";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import { storage } from "src/config/firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import GoogleAutocomplete from "react-google-autocomplete";
+import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 
-import { BoxInput, Button, SelectInput, WaveSvg } from "@components/ui";
-import roomAnimation from "@assets/roomAnimation.json";
-import { MdEditLocationAlt } from "react-icons/md";
+import { MdOutlineTitle, MdDescription } from "react-icons/md";
+import { HiArrowNarrowRight } from "react-icons/hi";
 import { FaLandmark } from "react-icons/fa";
 import { IoMdPricetag } from "react-icons/io";
+import { ImLocation2 } from "react-icons/im";
 import { BsUpload } from "react-icons/bs";
+
+import {
+  BoxInput,
+  Button,
+  SelectInput,
+  WaveSvg,
+  ProgressBar,
+} from "@components/ui";
+import { Navbar, Footer, Loading, Map } from "@components/common";
+import CheckBoxInput from "@components/ui/CheckBoxInput";
+
 import withAuth from "./../hocs/withAuth";
-import Footer from "@components/common/Footer/Footer";
-import { useSelector } from "react-redux";
+
 import { selectUser } from "src/slices/userSlice";
-import Loading from "@components/common/Loading";
+import { useAddListingMutation } from "src/slices/apiSlice";
+
+import { ListingCategories } from "src/enums/listingCategoryEnums";
+import { Listing } from "src/interface/Listings";
+
+import {
+  categoryOptions,
+  numericSelectValues,
+} from "../services/selectValuesService";
+import { MarkerType } from "@components/common/Map";
+// import { storeImageUrl } from "src/config/db";
 
 interface Props {
   animationData?: any;
 }
 
+interface categoryState<T = {}> {
+  selectedCategory: T;
+}
+
+interface Address {
+  position: google.maps.LatLngLiteral;
+  formattedAddress: string;
+}
+
+const initialCategoryState: categoryState<ListingCategories> = {
+  selectedCategory: ListingCategories.ROOM,
+};
+
 const Rentout: React.FC<Props> = () => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [landmark, setLandmark] = useState("");
+  const [category, setCategory] =
+    useState<categoryState<ListingCategories>>(initialCategoryState);
+  const [bathroom, setBathroom] = useState(1);
+  const [room, setRoom] = useState(1);
+  const [attachedBath, setAttachedBath] = useState(false);
+  const [parking, setParking] = useState(false);
+  const [wifi, setWifi] = useState(false);
+  const [floor, setFloor] = useState(1);
+  const [price, setPrice] = useState("");
+  const [img, setImg] = useState<string[]>([]);
+  const [imageUpload, setImageUpload] = useState<File[]>([]);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [place, setPlace] = useState<Address | null>(null);
+
+  const { isAuthenticated, userDetails } = useSelector(selectUser);
+  const [addListing, { isLoading, isError, error, isSuccess }] =
+    useAddListingMutation();
+  const router = useRouter();
+  // const {
+  //   placesService,
+  //   placesAutocompleteService,
+  //   placePredictions,
+  //   isPlacePredictionsLoading,
+  //   getPlacePredictions,
+  // } = usePlacesService({
+  //   apiKey: "AIzaSyBs_AaJ4CzvgnftMtLeO88fDiBAqxPIxA0",
+  //   debounce: 2000,
+  // });
+
+  if (isError) {
+    console.log(error, "Error");
+  } else if (isSuccess) {
+    router.push("/mylistings", undefined, { shallow: true });
+  }
+
+  const markers: MarkerType[] = [
+    {
+      id: "1",
+      //@ts-ignore
+      position: place ? place.position : userDetails?.currentLocation,
+    },
+  ];
+
+  const center = { lat: 28.237988, lng: 83.99559 };
+  const zoom = 13;
+
   const handleScroll = () => {
     window.scrollTo({ top: window.innerHeight * 0.8, behavior: "smooth" });
   };
 
-  const { isAuthenticated } = useSelector(selectUser);
+  //@ts-ignore
+  const handleCategoryChange = (newCategory: ListingCategories) => {
+    setCategory({ ...category, selectedCategory: newCategory });
+  };
+
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    const listingDetails: Listing = {
+      title,
+      userId: userDetails!.id,
+      description,
+      address: {
+        position: place!.position,
+        title: place!.formattedAddress,
+      },
+      nearbyLandmark: landmark,
+      details: {
+        bed: room,
+        bath: bathroom,
+        attachedBath,
+        wifi,
+        parking,
+        floor,
+      },
+      reserved: false,
+      category: category.selectedCategory,
+      price,
+      img,
+      lastUpdated: Date.now().toString(),
+      createdAt: Date.now().toString(),
+    };
+
+    console.log(listingDetails, "listingDetails");
+
+    await addListing(listingDetails);
+    // await storeImageUrl(img);
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (files && files.length > 0) {
+      const newSelectedImages: File[] = [];
+
+      for (let i = 0; i < files.length && i < 10; i++) {
+        newSelectedImages.push(files[i]);
+      }
+
+      setImageUpload((prev) => [...prev, ...newSelectedImages]);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    for (const photo of imageUpload) {
+      const storageRef = ref(
+        storage,
+        `/listings/${photo.name + Math.random()}`
+      );
+      const uploadTask = uploadBytesResumable(storageRef, photo);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          setIsUploading(true);
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(progress);
+
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          console.log("Error uploading: ", error);
+        },
+        async () => {
+          setIsUploading(false);
+          console.log("Uploaded!.", uploadTask);
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          setImg((prev) => [...prev, downloadURL]);
+        }
+      );
+    }
+  };
+
+  useEffect(() => {
+    console.log(place, "place");
+    title.length === 0 ||
+    description.length === 0 ||
+    landmark.length === 0 ||
+    price.length === 0
+      ? setIsDisabled(true)
+      : setIsDisabled(false);
+  }, [title, description, landmark, price, place]);
 
   if (!isAuthenticated) return <Loading />;
+
   return (
-    <div className="flex flex-col">
-      <Navbar />
-      <div className="flex flex-col px-16 items-center justify-center h-screen">
-        <div className="flex justify-between mt-10 ">
-          <div className="basis-1/2 flex flex-col justify-start items-start mr-10 z-[9999]">
-            <h1 className="text-7xl font-extrabold cursor-pointer">
-              Maximize your rental income with Rently.
-            </h1>
-            <p className="text-dark text-xl my-5 w-2/3">
-              Effortlessly Rent Out Your Rooms and Enjoy a Hassle-Free Rental
-              Experience
-            </p>
-            <button
-              type="button"
-              className="flex items-center justify-center h-10 px-10 py-6 bg-primary text-secondary rounded-full font-semibold mt-5 ease-in-out delay-100 transition-all hover:scale-110"
-              onClick={handleScroll}
-            >
-              <span className="mr-2 ">Get Started</span>
-              <HiArrowNarrowRight size={25} className="hover:scale-110" />
-            </button>
+    <>
+      {isLoading && <Loading />}
+      <div className="flex flex-col">
+        <Navbar />
+        <div className="flex flex-col px-16 items-center justify-center h-screen">
+          <div className="flex justify-between mt-10 ">
+            <div className="basis-1/2 flex flex-col justify-start items-start mr-10 z-[9999]">
+              <h1 className="text-7xl font-extrabold cursor-pointer">
+                Maximize your rental income with Rently.
+              </h1>
+              <p className="text-dark text-xl my-5 w-2/3">
+                Effortlessly Rent Out Your Rooms and Enjoy a Hassle-Free Rental
+                Experience
+              </p>
+              <button
+                type="button"
+                className="flex items-center justify-center h-10 px-10 py-6 bg-primary text-secondary rounded-full font-semibold mt-5 ease-in-out delay-100 transition-all hover:scale-110"
+                onClick={handleScroll}
+              >
+                <span className="mr-2 ">Get Started</span>
+                <HiArrowNarrowRight size={25} className="hover:scale-110" />
+              </button>
+            </div>
+            <div className="basis-1/2 ">
+              <video autoPlay loop className="w-full rounded">
+                <source src="/assets/animated_room.mp4" />
+              </video>
+            </div>
           </div>
-          <div className="basis-1/2 ">
-            {/* <Image
-              src="/assets/house_model.png"
-              alt="img"
-              width={500}
-              height={500}
+        </div>
+        <WaveSvg />
+        <div className="flex justify-between bg-primary h-auto text-secondary pl-16 z-50">
+          <form
+            className="basis-1/2 px-5 mx-auto h-fit"
+            onSubmit={handleSubmit}
+          >
+            <h1 className="text-3xl font-bold mb-5">Add Details</h1>
+            <BoxInput
+              label="Title"
+              placeholder="E.g: 2 big rooms"
+              Icon={MdOutlineTitle}
+              val={title}
+              onChange={setTitle}
+            />
+            <BoxInput
+              label="Description"
+              placeholder="Describe about your listing."
+              Icon={MdDescription}
+              val={description}
+              onChange={setDescription}
+            />
+            <GoogleAutocomplete
+              apiKey="AIzaSyBs_AaJ4CzvgnftMtLeO88fDiBAqxPIxA0"
+              options={{
+                types: [],
+                componentRestrictions: { country: "np" },
+              }}
+              onPlaceSelected={(value) => {
+                console.log(value, "value");
+                value.geometry?.location &&
+                  setPlace({
+                    position: {
+                      lat: value.geometry?.location?.lat(),
+                      lng: value.geometry?.location?.lng(),
+                    },
+                    formattedAddress: `${
+                      //@ts-ignore
+                      value!.address_components[0]!.long_name
+                      //@ts-ignore
+                    }, ${value.address_components[1].long_name}`,
+                  });
+              }}
+              className="bg-dark text-light text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none"
+            />
+            {/* <BoxInput
+              label="Location"
+              placeholder="Enter details or drag the pointer"
+              Icon={MdEditLocationAlt}
+              val={location}
+              onChange={setLocation}
             /> */}
-            {/* <Lottie animationData={roomAnimation} loop={true} /> */}
-            <video autoPlay loop className="w-full rounded">
-              <source src="/assets/animated_room.mp4" />
-            </video>
+            <BoxInput
+              label="Nearest landmark"
+              Icon={FaLandmark}
+              placeholder="E.g: Pokhara Engineering College"
+              val={landmark}
+              onChange={setLandmark}
+            />
+            <span className="flex w-full items-center">
+              <SelectInput
+                label="Categories"
+                options={categoryOptions}
+                onChange={handleCategoryChange}
+                value={category.selectedCategory}
+                rootStyle="mr-5"
+              />
+              <SelectInput
+                label="Rooms"
+                options={numericSelectValues}
+                onChange={(value) => setRoom(value)}
+                value={room}
+              />
+            </span>
+            <span className="flex w-full items-center justify-center">
+              <SelectInput
+                label="Bathroom"
+                options={numericSelectValues}
+                rootStyle="mr-5"
+                onChange={(value) => setBathroom(value)}
+                value={bathroom}
+              />
+              <CheckBoxInput
+                id="bathroom"
+                label="Attached"
+                rootStyle="mr-5"
+                isChecked={attachedBath}
+                handleChange={() => setAttachedBath(!attachedBath)}
+              />
+              <CheckBoxInput
+                id="wifi"
+                label="Wifi"
+                rootStyle="mr-5"
+                handleChange={() => setWifi(!wifi)}
+                isChecked={wifi}
+              />
+              <CheckBoxInput
+                id="parking"
+                label="Parking"
+                handleChange={() => setParking(!parking)}
+                isChecked={parking}
+              />
+            </span>
+            <SelectInput
+              label="Floor"
+              options={numericSelectValues}
+              onChange={(value) => setFloor(value)}
+              value={floor}
+            />
+            <BoxInput
+              label="Price"
+              Icon={IoMdPricetag}
+              placeholder="Enter price"
+              val={price}
+              onChange={setPrice}
+            />
+            {isUploading && <ProgressBar progress={progress} />}
+
+            <span className="flex w-full items-center justify-center">
+              {/* <BoxInput
+              label="Upload"
+              Icon={BsUpload}
+              type="file"
+              placeholder="Upload images"
+              isRequired={false}
+              onChange={handleFileInputChange}
+            /> */}
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileInputChange}
+              />
+              <button onClick={handleImageUpload} type="button">
+                Upload
+              </button>
+            </span>
+
+            <Button
+              label="Submit"
+              style={`${
+                isDisabled
+                  ? "text-dark bg-lightText"
+                  : "text-primary bg-secondary"
+              } !w-full`}
+              rootStyle="w-full mt-6"
+              isDisabled={isDisabled}
+            />
+          </form>
+          <div className="basis-1/2 mx-auto overflow-hidden mb-10">
+            <h1 className="text-3xl font-bold mx-auto mb-5">
+              Drag the pointer
+            </h1>
+            <Map
+              markers={markers}
+              center={center}
+              zoom={zoom}
+              style="w-fit h-auto rounded-tl-lg"
+              Icon={ImLocation2}
+            />
           </div>
         </div>
+        <Footer rootStyle="bg-secondary" style="text-primary" />
       </div>
-      <WaveSvg />
-      <div className="flex justify-between bg-primary h-[800px] text-secondary pl-16 z-50">
-        <div className="basis-1/2 px-5 mx-auto h-fit">
-          <h1 className="text-3xl font-bold mb-5">Add Details</h1>
-          <BoxInput
-            label="Location"
-            placeholder="Enter details or drag the pointer"
-            Icon={MdEditLocationAlt}
-          />
-          <BoxInput
-            label="Nearest landmark"
-            Icon={FaLandmark}
-            placeholder="E.g: Pokhara Engineering College"
-          />
-          <span className="flex w-full items-center">
-            <SelectInput
-              label="Category"
-              selected="Rooms"
-              options={[
-                {
-                  value: "Apartment",
-                  optionLabel: "Apartment",
-                },
-                {
-                  value: "House",
-                  optionLabel: "House",
-                },
-              ]}
-              rootStyle="mr-5"
-            />
-            <SelectInput
-              label="Rooms"
-              selected="1"
-              options={numericSelectValues}
-            />
-          </span>
-          <span className="flex w-full items-center justify-center">
-            <SelectInput
-              label="Bathroom"
-              selected="1"
-              options={numericSelectValues}
-              rootStyle="mr-5"
-            />
-            <CheckBoxInput id="bathroom" label="Attached " rootStyle="mr-5" />
-            <CheckBoxInput id="wifi" label="Wifi" rootStyle="mr-5" />
-            <CheckBoxInput id="parking" label="Parking" />
-          </span>
-          <SelectInput
-            label="Floor"
-            selected="Ground"
-            options={[
-              {
-                value: "1",
-                optionLabel: "1",
-              },
-              ...numericSelectValues,
-            ]}
-          />
-          <BoxInput
-            label="Price"
-            Icon={IoMdPricetag}
-            placeholder="Enter price"
-          />
-          <BoxInput
-            label="Upload"
-            Icon={BsUpload}
-            placeholder="Upload images"
-          />
-          <Button
-            href="/mylistings"
-            label="Submit"
-            style="text-primary bg-secondary !w-full"
-            rootStyle="w-full mt-6"
-          />
-        </div>
-        <div className="basis-1/2 mx-auto overflow-hidden mb-10">
-          <h1 className="text-3xl font-bold mx-auto mb-5">Drag the pointer</h1>
-          <Image
-            src="/mapimage.jpg"
-            height={500}
-            width={500}
-            alt="map"
-            className="w-fit h-auto rounded-tl-lg"
-          />
-        </div>
-      </div>
-      <Footer rootStyle="bg-secondary" style="text-primary" />
-    </div>
+    </>
   );
 };
-
-// export const getStaticProps = async () => {
-//   return {
-//     props: {
-//       animationData: roomAnimation,
-//     },
-//   };
-// };
 
 export default withAuth(Rentout);

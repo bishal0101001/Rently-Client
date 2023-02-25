@@ -2,13 +2,13 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Footer, Loading, Navbar } from "@components/common";
-import { useGetListingQuery } from "src/slices/apiSlice";
+import { useGetListingsQuery } from "src/slices/apiSlice";
 import { BsFillHouseDoorFill } from "react-icons/bs";
 
 type Props = {};
 
 const HomeAuthenticated = (props: Props) => {
-  const { data, error, isLoading } = useGetListingQuery();
+  const { data, error, isLoading } = useGetListingsQuery();
 
   return (
     <>
@@ -65,7 +65,7 @@ const HomeAuthenticated = (props: Props) => {
           Listings near you
         </h1>
         <div className="flex flex-wrap justify-start items-center mb-10 gap-5 md:justify-between">
-          {data?.listings?.map((i) => (
+          {data?.listings.map((i) => (
             <div key={i.id} className="flex ">
               <div className="basis-1/5 bg-light2 rounded-full mr-2 p-3 ">
                 <BsFillHouseDoorFill

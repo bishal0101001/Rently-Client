@@ -75,7 +75,7 @@ const LoginView: React.FC<Props> = () => {
   };
 
   if (isAuthenticated) {
-    router.push("/");
+    router.push("/",  undefined,  { shallow: true });
   }
   return (
     <>
