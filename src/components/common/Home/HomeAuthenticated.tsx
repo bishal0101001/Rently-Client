@@ -66,7 +66,11 @@ const HomeAuthenticated = (props: Props) => {
         </h1>
         <div className="flex flex-wrap justify-start items-center mb-10 gap-5 md:justify-between">
           {data?.listings.map((i) => (
-            <div key={i.id} className="flex ">
+            <Link
+              key={i.id}
+              className="flex cursor-pointer"
+              href={`/listing/${i.id}`}
+            >
               <div className="basis-1/5 bg-light2 rounded-full mr-2 p-3 ">
                 <BsFillHouseDoorFill
                   color="white"
@@ -77,7 +81,7 @@ const HomeAuthenticated = (props: Props) => {
                 <h1 className="text-lg font-semibold">{i.title}</h1>
                 <p>{i?.address?.title}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         <div className="absolute bottom-0 w-full">

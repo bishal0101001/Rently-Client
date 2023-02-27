@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { FaUserEdit, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail, MdEditLocationAlt } from "react-icons/md";
 
-import { Navbar, Line } from "@components/common";
+import { Navbar, Line, Loading } from "@components/common";
 import { BoxInput, Button } from "@components/ui";
 import { useSelector } from "react-redux";
 import { selectUser } from "./../slices/userSlice";
+import withAuth from "src/hocs/withAuth";
 
 type Props = {};
 
@@ -20,6 +21,8 @@ const myprofile = (props: Props) => {
   const handleSave = (e: React.FormEvent) => {
     console.log(e);
   };
+
+  if (!isAuthenticated) return <Loading />;
   return (
     <div>
       <Navbar />
@@ -58,7 +61,9 @@ const myprofile = (props: Props) => {
               labelStyle="text-primary"
               Icon={MdEmail}
               iconColor="black"
-              val={userDetails!.email}
+              val={
+                userDetails && userDetails.email ? userDetails.email : undefined
+              }
               disabled={true}
             />
             <BoxInput
@@ -69,7 +74,9 @@ const myprofile = (props: Props) => {
               labelStyle="text-primary"
               Icon={FaPhoneAlt}
               iconColor="black"
-              val={userDetails?.phone}
+              val={
+                userDetails && userDetails.phone ? userDetails.phone : undefined
+              }
               disabled={true}
             />
             <BoxInput
@@ -80,18 +87,18 @@ const myprofile = (props: Props) => {
               labelStyle="text-primary"
               Icon={MdEditLocationAlt}
               iconColor="black"
-              val="Srijana Chowk, Pokhara"
+              val=""
               disabled={true}
             />
             <Button href="#" label="Save" onClick={handleSave} />
-          </div>
-          <div className="basis-[20%]">
             <Button href="#" label="Edit" />
           </div>
+          {/* <div className="basis-[20%]">
+          </div> */}
         </div>
       </div>
     </div>
   );
 };
 
-export default myprofile;
+export default withAuth(myprofile);

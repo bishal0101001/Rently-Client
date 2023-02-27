@@ -9,6 +9,7 @@ import { twMerge } from "tailwind-merge";
 import { SiHomeadvisor } from "react-icons/si";
 import { IconType } from "react-icons";
 import { Listing } from "./../../interface/Listings";
+import Link from "next/link";
 
 interface MapProps {
   markers?: MarkerType[];
@@ -67,10 +68,16 @@ const Map: React.FC<MapProps> = ({
             <>
               <OverlayViewF
                 position={listing.address.position}
-                mapPaneName={OverlayView.MARKER_LAYER}
+                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
                 getPixelPositionOffset={getPixelPositionOffset}
               >
-                <Icon color="red" size={iconSize} />
+                <Link href={`/listing/${listing.id}`}>
+                  <Icon
+                    color="red"
+                    size={iconSize}
+                    className="bg-primary rounded-full p-1 cursor-pointer"
+                  />
+                </Link>
               </OverlayViewF>
             </>
           ))
@@ -81,7 +88,11 @@ const Map: React.FC<MapProps> = ({
                 mapPaneName={OverlayView.MARKER_LAYER}
                 getPixelPositionOffset={getPixelPositionOffset}
               >
-                <Icon color="red" size={iconSize} />
+                <Icon
+                  color="red"
+                  size={iconSize}
+                  className="bg-primary rounded-full p-1"
+                />
               </OverlayViewF>
             </>
           ))}

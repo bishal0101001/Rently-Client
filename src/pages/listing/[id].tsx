@@ -3,14 +3,11 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { HiLocationMarker } from "react-icons/hi";
 import { FaTelegramPlane } from "react-icons/fa";
 
-import { Comments, Footer, Navbar, Map } from "@components/common";
+import { Comments,Facilities, Footer, Navbar, Map } from "@components/common";
 import { Carousel } from "@components/ui";
 import { commentDetails } from "src/services/fakeCommentService";
 import { Listing } from "src/interface/Listings";
 import { getListings, getListingsById } from "src/config/db";
-import { BiBed, BiBath, BiWifi } from "react-icons/bi";
-import { CiParking1 } from "react-icons/ci";
-import { BsCheck2Circle } from "react-icons/bs";
 import { ImLocation2 } from "react-icons/im";
 
 interface Props {
@@ -47,27 +44,7 @@ const ListingDetailsPage = ({ listing }: Props) => {
             </div>
             <hr className="w-full border-light my-2" />
             <div className="flex flex-wrap items-center justify-between gap-2 my-2">
-              <p className="flex items-center justify-center gap-1">
-                {listing?.details.bed} <BiBed />
-              </p>
-              <p className="flex items-center justify-center gap-1">
-                {listing?.details.bath} <BiBath />
-              </p>
-              {listing?.details.attachedBath && (
-                <p className="flex items-center justify-center gap-1">
-                  Attached <BsCheck2Circle />
-                </p>
-              )}
-              {listing?.details.wifi && (
-                <p className="flex items-center justify-center gap-1">
-                  <BiWifi size={25} />
-                </p>
-              )}
-              {listing?.details.parking && (
-                <p className="flex items-center justify-center gap-1">
-                  <CiParking1 size={25} />
-                </p>
-              )}
+              <Facilities listing={listing} />
             </div>
             <button className="flex items-center justify-center gap-2 w-full h-10 bg-primary text-secondary rounded">
               Send Message{" "}

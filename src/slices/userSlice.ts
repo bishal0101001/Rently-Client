@@ -1,11 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
-
-interface Coords {
-  lat: number;
-  lng: number;
-}
 
 interface userDetails {
   id: string;
@@ -27,7 +21,7 @@ const initialState: userState = {
   isAuthenticated: false,
 };
 
-export const userSlice = createSlice({
+const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {

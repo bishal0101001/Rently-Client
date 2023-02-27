@@ -9,3 +9,5 @@ export { default as Map } from "./Map";
 export { default as Search } from "./SearchBar";
 export { default as HomeNotAuthenticated } from "./Home/HomeNotAuthenticated";
 export { default as HomeAuthenticated } from "./Home/HomeAuthenticated";
+export { default as GoogleAutoComplete } from "./GoogleAutoComplete";
+export { default as Facilities } from "./Facilities";

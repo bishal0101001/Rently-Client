@@ -5,6 +5,8 @@ import { MdOutlineBookmarkBorder, MdOutlineBookmark } from "react-icons/md";
 import Link from "next/link";
 import { facilities } from "./../../services/fakeFacilitiesService";
 import Skeleton from "react-loading-skeleton";
+import Facilities from "./Facilities";
+import { Listing } from "src/interface/Listings";
 
 interface Props {
   id?: string;
@@ -16,6 +18,7 @@ interface Props {
   nearestLandmark: string;
   img: string;
   saved: boolean;
+  listing: Listing;
 }
 
 const ListingCard: React.FC<Props> = ({
@@ -25,7 +28,9 @@ const ListingCard: React.FC<Props> = ({
   nearestLandmark,
   img,
   saved,
+  listing,
 }) => {
+  console.log(listing, "listing");
   return (
     <div className="flex flex-col w-[228px] h-80 bg-secondary border border-light rounded-lg drop-shadow-xl">
       <div className="h-40 basis-2/5">
@@ -48,10 +53,14 @@ const ListingCard: React.FC<Props> = ({
           <MdOutlineBookmarkBorder size={25} className="cursor-pointer" />
         )}
       </div>
-      <p className="text-base font-semibold px-2 pt-1">{address?.title}</p>
-      <p className="text-xs px-2 mb-1 text-light2">{nearestLandmark}</p>
-      <div className="flex flex-wrap items-center justify-between px-2 pt-2 border-t border-light">
-        {facilities.map((i) => (
+      <p className="text-base font-semibold px-2 pt-1 overflow-hidden">
+        {address?.title}
+      </p>
+      <p className="text-xs px-2 mb-1 text-light2">Near {nearestLandmark}</p>
+      <div className="px-2 pt-2 my-2 border-t border-light">
+        <Facilities listing={listing} />
+
+        {/* {facilities.map((i) => (
           <div
             key={i.name}
             className="flex items-center justify-center text-sm"
@@ -59,7 +68,7 @@ const ListingCard: React.FC<Props> = ({
             {i.icon}
             <span className="ml-1">{i.name}</span>
           </div>
-        ))}
+        ))} */}
       </div>
       <Link href={`/listing/${id}`} className="underline px-2 text-sm mx-auto">
         View Details

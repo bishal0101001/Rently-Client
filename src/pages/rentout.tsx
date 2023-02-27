@@ -4,10 +4,12 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { storage } from "src/config/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import GoogleAutocomplete from "react-google-autocomplete";
-import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 
-import { MdOutlineTitle, MdDescription } from "react-icons/md";
+import {
+  MdOutlineTitle,
+  MdDescription,
+  MdEditLocationAlt,
+} from "react-icons/md";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { FaLandmark } from "react-icons/fa";
 import { IoMdPricetag } from "react-icons/io";
@@ -20,9 +22,15 @@ import {
   SelectInput,
   WaveSvg,
   ProgressBar,
+  CheckBoxInput,
 } from "@components/ui";
-import { Navbar, Footer, Loading, Map } from "@components/common";
-import CheckBoxInput from "@components/ui/CheckBoxInput";
+import {
+  Navbar,
+  Footer,
+  Loading,
+  Map,
+  GoogleAutoComplete,
+} from "@components/common";
 
 import withAuth from "./../hocs/withAuth";
 
@@ -80,16 +88,6 @@ const Rentout: React.FC<Props> = () => {
   const [addListing, { isLoading, isError, error, isSuccess }] =
     useAddListingMutation();
   const router = useRouter();
-  // const {
-  //   placesService,
-  //   placesAutocompleteService,
-  //   placePredictions,
-  //   isPlacePredictionsLoading,
-  //   getPlacePredictions,
-  // } = usePlacesService({
-  //   apiKey: "AIzaSyBs_AaJ4CzvgnftMtLeO88fDiBAqxPIxA0",
-  //   debounce: 2000,
-  // });
 
   if (isError) {
     console.log(error, "Error");
@@ -267,36 +265,14 @@ const Rentout: React.FC<Props> = () => {
               val={description}
               onChange={setDescription}
             />
-            <GoogleAutocomplete
-              apiKey="AIzaSyBs_AaJ4CzvgnftMtLeO88fDiBAqxPIxA0"
-              options={{
-                types: [],
-                componentRestrictions: { country: "np" },
-              }}
-              onPlaceSelected={(value) => {
-                console.log(value, "value");
-                value.geometry?.location &&
-                  setPlace({
-                    position: {
-                      lat: value.geometry?.location?.lat(),
-                      lng: value.geometry?.location?.lng(),
-                    },
-                    formattedAddress: `${
-                      //@ts-ignore
-                      value!.address_components[0]!.long_name
-                      //@ts-ignore
-                    }, ${value.address_components[1].long_name}`,
-                  });
-              }}
-              className="bg-dark text-light text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none"
-            />
-            {/* <BoxInput
+
+            <BoxInput
               label="Location"
-              placeholder="Enter details or drag the pointer"
               Icon={MdEditLocationAlt}
-              val={location}
-              onChange={setLocation}
-            /> */}
+              inputWrapperStyle="py-0"
+            >
+              <GoogleAutoComplete onSelect={(value) => setPlace(value)} />
+            </BoxInput>
             <BoxInput
               label="Nearest landmark"
               Icon={FaLandmark}

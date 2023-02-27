@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { selectUser } from "src/slices/userSlice";
@@ -15,9 +15,11 @@ const withAuth = <T extends object>(
 
     const { isAuthenticated } = useSelector(selectUser);
 
-    if (!isAuthenticated) {
-      router.push("/auth/login", undefined, { shallow: true });
-    }
+    useEffect(() => {
+      if (!isAuthenticated) {
+        router.push("/auth/login", undefined, { shallow: true });
+      }
+    }, []);
 
     return <WrappedComponent {...props} />;
   };

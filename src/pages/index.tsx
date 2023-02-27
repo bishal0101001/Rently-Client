@@ -38,7 +38,6 @@ export default function Home() {
         );
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition((position) => {
-            console.log(position, "position");
             const address: google.maps.LatLngLiteral = {
               lat: position.coords.latitude,
               lng: position.coords.longitude,

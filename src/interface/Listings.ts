@@ -30,3 +30,9 @@ export interface Listing {
     comment: string;
   }[];
 }
+
+export interface Address {
+  position: google.maps.LatLngLiteral;
+  formattedAddress: string;
+  addressType: string[];
+}
