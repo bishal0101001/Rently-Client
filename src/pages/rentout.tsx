@@ -148,7 +148,9 @@ const Rentout: React.FC<Props> = () => {
     // await storeImageUrl(img);
   };
 
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = e.target.files;
 
     if (files && files.length > 0) {
@@ -160,6 +162,9 @@ const Rentout: React.FC<Props> = () => {
 
       setImageUpload((prev) => [...prev, ...newSelectedImages]);
     }
+    console.log("imageupload handler before");
+    await handleImageUpload();
+    console.log("imageupload handler after");
   };
 
   const handleImageUpload = async () => {
@@ -338,26 +343,23 @@ const Rentout: React.FC<Props> = () => {
               onChange={setPrice}
             />
             {isUploading && <ProgressBar progress={progress} />}
-
-            <span className="flex w-full items-center justify-center">
-              {/* <BoxInput
-              label="Upload"
-              Icon={BsUpload}
-              type="file"
-              placeholder="Upload images"
-              isRequired={false}
-              onChange={handleFileInputChange}
-            /> */}
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFileInputChange}
-              />
-              <button onClick={handleImageUpload} type="button">
-                Upload
-              </button>
-            </span>
+            <BoxInput label="Upload" Icon={BsUpload}>
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileInputChange}
+                />
+                {/* <button
+                  onClick={handleImageUpload}
+                  type="button"
+                  className="bg-primary p-2"
+                >
+                  Upload
+                </button> */}
+              </>
+            </BoxInput>
 
             <Button
               label="Submit"

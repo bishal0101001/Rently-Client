@@ -50,7 +50,7 @@ const SignUpView: FC<Props> = () => {
           name,
           email: user.email,
           phone,
-          address: "Srijana Chowk",
+          address: "",
           //@ts-ignore
           token: user.accessToken,
         })

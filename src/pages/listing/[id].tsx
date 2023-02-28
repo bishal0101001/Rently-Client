@@ -1,20 +1,22 @@
 import React from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { HiLocationMarker } from "react-icons/hi";
-import { FaTelegramPlane } from "react-icons/fa";
+import { FaHouseUser, FaTelegramPlane } from "react-icons/fa";
 
-import { Comments,Facilities, Footer, Navbar, Map } from "@components/common";
+import { Comments, Facilities, Footer, Navbar, Map } from "@components/common";
 import { Carousel } from "@components/ui";
 import { commentDetails } from "src/services/fakeCommentService";
 import { Listing } from "src/interface/Listings";
-import { getListings, getListingsById } from "src/config/db";
+import { getListings, getListingsById, getListingOwner } from "src/config/db";
 import { ImLocation2 } from "react-icons/im";
+import { User } from "src/interface/User";
 
 interface Props {
   listing: Listing;
+  listingOwnerDetails: User;
 }
 
-const ListingDetailsPage = ({ listing }: Props) => {
+const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
   return (
     <div className="flex flex-col ">
       <Navbar />
@@ -56,13 +58,15 @@ const ListingDetailsPage = ({ listing }: Props) => {
         </div>
         <div className="flex flex-col items-start w-3/5 gap-4 my-10 z-50">
           <div className="flex items-center justity-start gap-3">
-            <img
-              src="/profile.jpg"
-              alt="profile"
-              className="rounded-full w-24 h-24 object-cover"
-            />
-            <h1 className="font-semibold text-3xl w-3/5">
-              Apartment Hosted by Sujit Gauchan
+            <div className="rounded-full w-20 h-20 bg-light2 flex items-center justify-center">
+              <FaHouseUser size={40} color="white" />
+            </div>
+            <h1 className="flex flex-col font-semibold text-3xl ">
+              {`${listing.category} listed by - ${listingOwnerDetails.name}`}
+              <span className="text-sm">
+                {listing.createdAt && new Date(listing.createdAt).getDay()} days
+                ago
+              </span>
             </h1>
           </div>
           <p>{listing?.description}</p>
@@ -98,10 +102,12 @@ const ListingDetailsPage = ({ listing }: Props) => {
 //@ts-ignore
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const listing = await getListingsById(params?.id as string);
+  const listingOwnerDetails = await getListingOwner(listing.userId);
 
   return {
     props: {
       listing,
+      listingOwnerDetails,
     },
   };
 };

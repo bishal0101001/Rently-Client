@@ -59,6 +59,21 @@ export const getListingsById = async (id: string) => {
   }
 };
 
+export const getListingOwner = async (id: string) => {
+  const docRef = doc(db, "users", id);
+
+  try {
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      return { error: "User doesnot exists" };
+    }
+  } catch (error) {
+    return { error };
+  }
+};
+
 export const addListing = async ({ title, ...rest }: Listing) => {
   const data = { title, ...rest };
   const docRef = await addDoc(collection(db, "listings"), data);
@@ -66,8 +81,7 @@ export const addListing = async ({ title, ...rest }: Listing) => {
 };
 
 export const addUser = async ({ id, ...rest }: User) => {
-  const data = { id, ...rest };
-  const docRef = await addDoc(collection(db, "users"), data);
+  const docRef = await setDoc(doc(db, "users", id), { ...rest });
   return docRef;
 };
 
