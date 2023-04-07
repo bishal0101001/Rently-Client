@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUserEdit, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail, MdEditLocationAlt } from "react-icons/md";
 
@@ -7,6 +7,8 @@ import { BoxInput, Button } from "@components/ui";
 import { useSelector } from "react-redux";
 import { selectUser } from "./../slices/userSlice";
 import withAuth from "src/hocs/withAuth";
+import { getUserById } from "src/config/db";
+import { DocumentData } from "firebase/firestore";
 
 type Props = {};
 
@@ -15,6 +17,7 @@ const myprofile = (props: Props) => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [me, setMe] = useState<DocumentData | null>(null);
 
   const { userDetails, isAuthenticated } = useSelector(selectUser);
 
@@ -23,6 +26,16 @@ const myprofile = (props: Props) => {
   };
 
   if (!isAuthenticated) return <Loading />;
+
+  const setUserDetails = async () => {
+    const user = userDetails && (await getUserById(userDetails?.id));
+    console.log(user, "Me");
+    setMe(user);
+  };
+
+  useEffect(() => {
+    setUserDetails();
+  }, []);
   return (
     <div>
       <Navbar />
@@ -50,7 +63,7 @@ const myprofile = (props: Props) => {
               labelStyle="text-primary"
               Icon={FaUserEdit}
               iconColor="black"
-              val="Bishal Shrestha"
+              val={me && me.name}
               disabled={true}
             />
             <BoxInput
@@ -61,9 +74,7 @@ const myprofile = (props: Props) => {
               labelStyle="text-primary"
               Icon={MdEmail}
               iconColor="black"
-              val={
-                userDetails && userDetails.email ? userDetails.email : undefined
-              }
+              val={me && me.email}
               disabled={true}
             />
             <BoxInput
@@ -74,9 +85,7 @@ const myprofile = (props: Props) => {
               labelStyle="text-primary"
               Icon={FaPhoneAlt}
               iconColor="black"
-              val={
-                userDetails && userDetails.phone ? userDetails.phone : undefined
-              }
+              val={me && me.phone}
               disabled={true}
             />
             <BoxInput
@@ -87,14 +96,12 @@ const myprofile = (props: Props) => {
               labelStyle="text-primary"
               Icon={MdEditLocationAlt}
               iconColor="black"
-              val=""
+              val={me && me.address}
               disabled={true}
             />
             <Button href="#" label="Save" onClick={handleSave} />
             <Button href="#" label="Edit" />
           </div>
-          {/* <div className="basis-[20%]">
-          </div> */}
         </div>
       </div>
     </div>

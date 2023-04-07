@@ -59,7 +59,7 @@ export const getListingsById = async (id: string) => {
   }
 };
 
-export const getListingOwner = async (id: string) => {
+export const getUserById = async (id: string) => {
   const docRef = doc(db, "users", id);
 
   try {

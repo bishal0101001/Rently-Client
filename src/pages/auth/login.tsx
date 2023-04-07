@@ -10,6 +10,7 @@ import { doSignIn, doSignInWithPopup } from "src/config/firebase";
 import { FirebaseError } from "firebase/app";
 import { Loading } from "@components/common";
 import { formatFirebaseError } from "src/utils/formatFirebaseError";
+import { addUser } from "src/config/db";
 
 interface Props {}
 
@@ -37,6 +38,8 @@ const LoginView: React.FC<Props> = () => {
     setLoading(true);
     try {
       const { user } = await doSignIn(email, password);
+
+      console.log(user, 'user')
       dispatch(
         login({
           id: user.uid,
@@ -61,6 +64,8 @@ const LoginView: React.FC<Props> = () => {
 
   const handleSignInWithGoogle = async () => {
     const { user } = await doSignInWithPopup();
+    console.log(user, 'user')
+
     dispatch(
       login({
         id: user.uid,
@@ -72,10 +77,19 @@ const LoginView: React.FC<Props> = () => {
         token: user.accessToken,
       })
     );
+    user.email &&
+      user.displayName &&
+      (await addUser({
+        id: user.uid,
+        name: user.displayName,
+        email: user.email,
+        phone: user?.phoneNumber || undefined,
+        address: "",
+      }));
   };
 
   if (isAuthenticated) {
-    router.push("/",  undefined,  { shallow: true });
+    router.push("/", undefined, { shallow: true });
   }
   return (
     <>

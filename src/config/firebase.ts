@@ -12,20 +12,25 @@ import {
 } from "firebase/auth";
 
 import { getStorage } from "firebase/storage";
+// import {
+//   FirebaseAuthProvider,
+//   FirebaseDataProvider,
+// } from "react-admin-firebase";
 
 // interface Args {
 //   email: string;
 //   password: string;
 // }
 
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBMNlSD8L4_yLJPL8rb9OlLrw2ULscXHho",
-  authDomain: "rently-c812a.firebaseapp.com",
-  projectId: "rently-c812a",
-  storageBucket: "rently-c812a.appspot.com",
-  messagingSenderId: "299731886612",
-  appId: "1:299731886612:web:9df4bb0207b97d3cb27d01",
-  measurementId: "G-G8JHEFMPX9",
+  apiKey: process.env.firebaseApiKey,
+  authDomain: process.env.authDomain,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId,
+  appId: process.env.appId,
+  measurementId: process.env.measurementId,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -42,8 +47,9 @@ const doSignInWithPopup = () => signInWithPopup(auth, provider);
 
 const doSignOut = () => signOut(auth);
 
-
 export const storage = getStorage(app);
+// export const dataProvider = FirebaseDataProvider(firebaseConfig);
+// export const authProvider = FirebaseAuthProvider(firebaseConfig, {});
 
 export { auth, createUser, doSignIn, doSignOut, doSignInWithPopup };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   GoogleMap,
   OverlayView,
@@ -38,7 +38,9 @@ const Map: React.FC<MapProps> = ({
   listings,
 }) => {
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBs_AaJ4CzvgnftMtLeO88fDiBAqxPIxA0",
+    googleMapsApiKey: process.env.googleMapsApiKey
+      ? process.env.googleMapsApiKey
+      : "",
     libraries: ["places"],
   });
   const className = twMerge(`w-full h-full ${style}`);
@@ -54,6 +56,9 @@ const Map: React.FC<MapProps> = ({
   });
 
   if (loadError) return <div>Map cannot be loaded right now, sorry.</div>;
+
+  // useEffect(() => {
+  // }, []);
 
   return isLoaded ? (
     <GoogleMap
@@ -75,7 +80,7 @@ const Map: React.FC<MapProps> = ({
                   <Icon
                     color="red"
                     size={iconSize}
-                    className="bg-primary rounded-full p-1 cursor-pointer"
+                    className="bg-primary rounded-full p-1 cursor-pointer hover:scale-110"
                   />
                 </Link>
               </OverlayViewF>

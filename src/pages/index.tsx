@@ -19,8 +19,10 @@ const inter = Inter({ subsets: ["latin"] });
 // }
 
 export default function Home() {
-  const { isAuthenticated, userDetails } = useSelector(selectUser);
+  const { isAuthenticated } = useSelector(selectUser);
+
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -31,7 +33,7 @@ export default function Home() {
             name: currentUser?.displayName,
             email: currentUser.email,
             phone: currentUser!.phoneNumber,
-            address: "Srijana Chowk",
+            address: "",
             //@ts-ignore
             token: currentUser.accessToken,
           })

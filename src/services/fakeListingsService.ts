@@ -24,7 +24,7 @@ export const myListings = [
       parking: false,
       floor: 1,
     },
-    category: ListingCategories.Room,
+    // category: ListingCategories.Room,
     comments: [
       {
         id: "c1",
@@ -61,7 +61,7 @@ export const myListings = [
       parking: false,
       floor: 1,
     },
-    category: ListingCategories.Room,
+    // category: ListingCategories.Room,
     comments: [
       {
         id: "c1",
@@ -98,7 +98,7 @@ export const myListings = [
       parking: false,
       floor: 1,
     },
-    category: ListingCategories.Room,
+    // category: ListingCategories.Room,
     comments: [
       {
         id: "c1",
@@ -131,7 +131,7 @@ export const listingsData = [
       parking: false,
       floor: 1,
     },
-    category: ListingCategories.Room,
+    // category: ListingCategories.Room,
     comments: [
       {
         id: "c1",
@@ -161,7 +161,7 @@ export const listingsData = [
       parking: false,
       floor: 1,
     },
-    category: ListingCategories.Apartment,
+    // category: ListingCategories.Apartment,
     comments: [
       {
         id: "c1",
@@ -191,7 +191,7 @@ export const listingsData = [
       parking: false,
       floor: 1,
     },
-    category: ListingCategories.Room,
+    // category: ListingCategories.Room,
     comments: [
       {
         id: "c1",
@@ -221,7 +221,7 @@ export const listingsData = [
       parking: false,
       floor: 1,
     },
-    category: ListingCategories.Room,
+    // category: ListingCategories.Room,
     comments: [
       {
         id: "c1",
@@ -251,7 +251,7 @@ export const listingsData = [
       parking: false,
       floor: 1,
     },
-    category: ListingCategories.Room,
+    // category: ListingCategories.Room,
     comments: [
       {
         id: "c1",

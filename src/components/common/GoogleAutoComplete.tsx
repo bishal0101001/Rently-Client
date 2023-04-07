@@ -15,7 +15,7 @@ const GoogleAutoComplete = ({ onSelect, style }: Props) => {
   );
   return (
     <GoogleAutocomplete
-      apiKey="AIzaSyBs_AaJ4CzvgnftMtLeO88fDiBAqxPIxA0"
+      apiKey={process.env.googleMapsApiKey}
       options={{
         types: [],
         componentRestrictions: { country: "np" },

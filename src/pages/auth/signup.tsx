@@ -75,17 +75,27 @@ const SignUpView: FC<Props> = () => {
 
   const handleSignInWithGoogle = async () => {
     const { user } = await doSignInWithPopup();
+    console.log(user, "user from google signup");
     dispatch(
       login({
         id: user.uid,
         name: user.displayName,
         email: user.email,
         phone: user.phoneNumber,
-        address: "Srijana Chowk",
+        address: "",
         //@ts-ignore
         token: user.accessToken,
       })
     );
+    user.email &&
+      user.displayName &&
+      (await addUser({
+        id: user.uid,
+        name: user.displayName,
+        email: user.email,
+        phone: user?.phoneNumber || undefined,
+        address: "",
+      }));
   };
 
   if (isAuthenticated) {

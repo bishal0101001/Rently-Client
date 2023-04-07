@@ -7,9 +7,11 @@ import { Comments, Facilities, Footer, Navbar, Map } from "@components/common";
 import { Carousel } from "@components/ui";
 import { commentDetails } from "src/services/fakeCommentService";
 import { Listing } from "src/interface/Listings";
-import { getListings, getListingsById, getListingOwner } from "src/config/db";
+import { getListings, getListingsById, getUserById } from "src/config/db";
 import { ImLocation2 } from "react-icons/im";
 import { User } from "src/interface/User";
+import { MdEmail } from "react-icons/md";
+import { BsTelephoneFill } from "react-icons/bs";
 
 interface Props {
   listing: Listing;
@@ -48,12 +50,20 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
             <div className="flex flex-wrap items-center justify-between gap-2 my-2">
               <Facilities listing={listing} />
             </div>
-            <button className="flex items-center justify-center gap-2 w-full h-10 bg-primary text-secondary rounded">
+            {/* <button className="flex items-center justify-center gap-2 w-full h-10 bg-primary text-secondary rounded">
               Send Message{" "}
               <i>
                 <FaTelegramPlane size={25} />
               </i>
-            </button>
+            </button> */}
+            <div className="flex items-center justify-center gap-2 w-full h-10 rounded">
+              <span className="flex items-center justify-center gap-2 w-full h-full bg-primary text-secondary rounded">
+                Phone <BsTelephoneFill size={25} />
+              </span>
+              <span className="flex items-center justify-center gap-2 w-full h-full bg-primary text-secondary rounded">
+                Email <MdEmail size={25} />
+              </span>
+            </div>
           </div>
         </div>
         <div className="flex flex-col items-start w-3/5 gap-4 my-10 z-50">
@@ -102,7 +112,7 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
 //@ts-ignore
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const listing = await getListingsById(params?.id as string);
-  const listingOwnerDetails = await getListingOwner(listing.userId);
+  const listingOwnerDetails = await getUserById(listing.userId);
 
   return {
     props: {

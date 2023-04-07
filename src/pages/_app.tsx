@@ -2,12 +2,15 @@ import "../styles/globals.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useEffect, useState } from "react";
 import type { AppProps } from "next/app";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { Inter } from "@next/font/google";
 
 import { store } from "src/store";
 import { Loading } from "@components/common";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "src/config/firebase";
+import { login, logout, setCurrentLocation } from "src/slices/userSlice";
 
 // import { AuthProvider } from "src/context/authContext";
 
@@ -48,3 +51,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </div>
   );
 }
+
+export const getInitialProps = () => {};
