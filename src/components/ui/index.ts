@@ -9,3 +9,4 @@ export { default as Carousel } from "./Carousel";
 export { default as Icon } from "./Icon";
 export { default as ProgressBar } from "./ProgressBar";
 export { default as WaveGradient } from "./WaveGradient";
+export { default as Toast } from "./Toast";

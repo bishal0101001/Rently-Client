@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { HiLocationMarker } from "react-icons/hi";
 import { FaHouseUser, FaTelegramPlane } from "react-icons/fa";
 
 import { Comments, Facilities, Footer, Navbar, Map } from "@components/common";
-import { Carousel } from "@components/ui";
+import { Carousel, Toast } from "@components/ui";
 import { commentDetails } from "src/services/fakeCommentService";
 import { Listing } from "src/interface/Listings";
 import { getListings, getListingsById, getUserById } from "src/config/db";
@@ -12,6 +12,7 @@ import { ImLocation2 } from "react-icons/im";
 import { User } from "src/interface/User";
 import { MdEmail } from "react-icons/md";
 import { BsTelephoneFill } from "react-icons/bs";
+import Link from "next/link";
 
 interface Props {
   listing: Listing;
@@ -19,8 +20,19 @@ interface Props {
 }
 
 const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
+  const [showToast, setShowToast] = useState(false);
+  const handleCopy = async () => {
+    try {
+      listingOwnerDetails.phone &&
+        (await navigator.clipboard.writeText(listingOwnerDetails.phone));
+      setShowToast(true);
+    } catch (err) {
+      console.error("Failed to copy to clipboard:", err);
+    }
+  };
   return (
     <div className="flex flex-col ">
+      {showToast && <Toast message="Number copied to clipboard!" />}
       <Navbar />
       <div className="pt-14 w-auto h-full mx-16">
         {/* <ImageSlider /> */}
@@ -47,9 +59,12 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
               </p>
             </div>
             <hr className="w-full border-light my-2" />
-            <div className="flex flex-wrap items-center justify-between gap-2 my-2">
+            <div className="flex flex-wrap items-center justify-between gap-2 my-1">
               <Facilities listing={listing} />
             </div>
+            {/* <span className="flex items-center justify-center gap-2 bg-primary text-secondary rounded">
+              <BsTelephoneFill size={20} /> {listingOwnerDetails.phone}
+            </span> */}
             {/* <button className="flex items-center justify-center gap-2 w-full h-10 bg-primary text-secondary rounded">
               Send Message{" "}
               <i>
@@ -57,12 +72,18 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
               </i>
             </button> */}
             <div className="flex items-center justify-center gap-2 w-full h-10 rounded">
-              <span className="flex items-center justify-center gap-2 w-full h-full bg-primary text-secondary rounded">
-                Phone <BsTelephoneFill size={25} />
+              <span
+                className="flex items-center justify-center gap-2 w-full h-full bg-primary text-secondary rounded cursor-pointer"
+                onClick={handleCopy}
+              >
+                <BsTelephoneFill size={20} /> {listingOwnerDetails.phone}
               </span>
-              <span className="flex items-center justify-center gap-2 w-full h-full bg-primary text-secondary rounded">
-                Email <MdEmail size={25} />
-              </span>
+              <Link
+                href={`mailto:${listingOwnerDetails.email}`}
+                className="flex items-center justify-center gap-2 w-full h-full bg-primary text-secondary rounded cursor-pointer"
+              >
+                Email <MdEmail size={20} />
+              </Link>
             </div>
           </div>
         </div>
