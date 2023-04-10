@@ -41,7 +41,6 @@ const SignUpView: FC<Props> = () => {
     setLoading(true);
     try {
       const userRes = await createUser(email, password);
-      console.log(userRes, "user");
       const { user } = userRes;
 
       dispatch(
@@ -53,14 +52,20 @@ const SignUpView: FC<Props> = () => {
           address: "",
           //@ts-ignore
           token: user.accessToken,
+          savedListings: [],
         })
       );
 
       const userAdded =
         user.email &&
-        addUser({ id: user.uid, name, email: user.email, phone, address: "" });
-
-      console.log(userAdded, "userAdded");
+        addUser({
+          id: user.uid,
+          name,
+          email: user.email,
+          phone,
+          address: "",
+          savedListing: [],
+        });
 
       setLoading(false);
     } catch (error) {
@@ -75,7 +80,6 @@ const SignUpView: FC<Props> = () => {
 
   const handleSignInWithGoogle = async () => {
     const { user } = await doSignInWithPopup();
-    console.log(user, "user from google signup");
     dispatch(
       login({
         id: user.uid,
@@ -85,6 +89,7 @@ const SignUpView: FC<Props> = () => {
         address: "",
         //@ts-ignore
         token: user.accessToken,
+        savedListings: [],
       })
     );
     user.email &&

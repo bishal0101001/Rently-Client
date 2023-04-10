@@ -5,12 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { Logo, Input } from "@components/ui";
-import { login, selectUser } from "src/slices/userSlice";
+import { login, selectUser, toggleSaveListing } from "src/slices/userSlice";
 import { doSignIn, doSignInWithPopup } from "src/config/firebase";
 import { FirebaseError } from "firebase/app";
 import { Loading } from "@components/common";
 import { formatFirebaseError } from "src/utils/formatFirebaseError";
-import { addUser } from "src/config/db";
+import { addUser, getUserById } from "src/config/db";
 
 interface Props {}
 
@@ -39,7 +39,6 @@ const LoginView: React.FC<Props> = () => {
     try {
       const { user } = await doSignIn(email, password);
 
-      console.log(user, 'user')
       dispatch(
         login({
           id: user.uid,
@@ -49,9 +48,13 @@ const LoginView: React.FC<Props> = () => {
           address: "Srijana Chowk",
           //@ts-ignore
           token: user.accessToken,
+          savedListings: [],
         })
       );
       setLoading(false);
+      // const userDetails = await getUserById(user.uid);
+      // console.log(userDetails, "userDetails");
+      // dispatch(toggleSaveListing(userDetails.savedListing));
     } catch (error) {
       setLoading(false);
 
@@ -64,7 +67,6 @@ const LoginView: React.FC<Props> = () => {
 
   const handleSignInWithGoogle = async () => {
     const { user } = await doSignInWithPopup();
-    console.log(user, 'user')
 
     dispatch(
       login({
@@ -72,9 +74,10 @@ const LoginView: React.FC<Props> = () => {
         name: user.displayName,
         email: user.email,
         phone: user.phoneNumber,
-        address: "Srijana Chowk",
+        address: "",
         //@ts-ignore
         token: user.accessToken,
+        savedListings: [],
       })
     );
     user.email &&

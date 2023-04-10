@@ -8,9 +8,11 @@ import {
   logout,
   selectUser,
   setCurrentLocation,
+  toggleSaveListing,
 } from "./../slices/userSlice";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "src/config/firebase";
+import { getUserById } from "src/config/db";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,10 +25,10 @@ export default function Home() {
 
   const dispatch = useDispatch();
 
-
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
+        const userDetails = await getUserById(currentUser.uid);
         dispatch(
           login({
             id: currentUser.uid,
@@ -36,8 +38,10 @@ export default function Home() {
             address: "",
             //@ts-ignore
             token: currentUser.accessToken,
+            savedListings: userDetails.savedListing,
           })
         );
+        // dispatch(toggleSaveListing(userDetails.savedListing));
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition((position) => {
             const address: google.maps.LatLngLiteral = {
@@ -60,20 +64,3 @@ export default function Home() {
     </div>
   );
 }
-
-// export const getServerSideProps = async () => {
-//   const firebaseConfig = {
-//     apiKey: process.env.FIREBASE_API_KEY,
-//     authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-//     projectId: process.env.FIREBASE_PROJECT_ID,
-//     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-//     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-//     appId: process.env.FIREBASE_APP_ID,
-//     measurementId: process.env.FIREBASE_MEASUREMENT_ID,
-//   };
-//   return {
-//     props: {
-//       config: firebaseConfig,
-//     },
-//   };
-// };

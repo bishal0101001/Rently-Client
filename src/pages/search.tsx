@@ -22,6 +22,7 @@ const search = (props: Props) => {
   // const { isAuthenticated } = useSelector(selectUser);
   const { position, zoom, formattedAddress, addressType } =
     useSelector(selectPlace);
+  const { userDetails } = useSelector(selectUser);
   const { data, error, isLoading } = useGetListingsQuery();
 
   const filteredListings =
@@ -52,8 +53,15 @@ const search = (props: Props) => {
                     address={i?.address}
                     nearestLandmark={i?.nearbyLandmark}
                     img={i?.img[0]}
-                    saved={2 % 2 === 0 ? true : false}
+                    saved={
+                      userDetails
+                        ? userDetails?.savedListings.some(
+                            (item) => item.id === i.id
+                          )
+                        : false
+                    }
                     listing={i}
+                    currentUserId={userDetails?.id}
                   />
                 </div>
               ))}

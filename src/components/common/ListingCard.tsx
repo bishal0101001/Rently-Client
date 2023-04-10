@@ -7,6 +7,9 @@ import { facilities } from "./../../services/fakeFacilitiesService";
 import Skeleton from "react-loading-skeleton";
 import Facilities from "./Facilities";
 import { Listing } from "src/interface/Listings";
+import { saveListing, unsaveListing } from "src/config/db";
+import { useDispatch } from "react-redux";
+import { toggleSaveListing } from "src/slices/userSlice";
 
 interface Props {
   id?: string;
@@ -19,6 +22,7 @@ interface Props {
   img: string;
   saved: boolean;
   listing: Listing;
+  currentUserId?: string;
 }
 
 const ListingCard: React.FC<Props> = ({
@@ -29,8 +33,21 @@ const ListingCard: React.FC<Props> = ({
   img,
   saved,
   listing,
+  currentUserId,
 }) => {
-  console.log(listing, "listing");
+  const dispatch = useDispatch();
+  const handleSave = async () => {
+    if (id && currentUserId) {
+      saveListing(id, currentUserId);
+      dispatch(toggleSaveListing([{ id }]));
+    }
+  };
+  const handleUnsave = async () => {
+    if (id && currentUserId) {
+      unsaveListing(id, currentUserId);
+      dispatch(toggleSaveListing([{ id }]));
+    }
+  };
   return (
     <div className="flex flex-col w-[228px] h-80 bg-secondary border border-light rounded-lg drop-shadow-xl">
       <div className="h-40 basis-2/5">
@@ -48,9 +65,18 @@ const ListingCard: React.FC<Props> = ({
           <span className="text-xs font-normal text-dark">per month</span>
         </p>
         {saved ? (
-          <MdOutlineBookmark size={25} color="red" className="cursor-pointer" />
+          <MdOutlineBookmark
+            size={25}
+            color="red"
+            className="cursor-pointer"
+            onClick={handleUnsave}
+          />
         ) : (
-          <MdOutlineBookmarkBorder size={25} className="cursor-pointer" />
+          <MdOutlineBookmarkBorder
+            size={25}
+            className="cursor-pointer"
+            onClick={handleSave}
+          />
         )}
       </div>
       <p className="text-base font-semibold px-2 pt-1 overflow-hidden">

@@ -24,7 +24,7 @@ const Navbar: React.FC<NavProps> = ({ isSearch = false, isHome = false }) => {
   };
 
   return (
-    <nav className="flex justify-between items-center w-full h-16 backdrop-blur-sm bg-white/70 fixed z-[99999] border border-b-dark px-10 md:px-16 ">
+    <nav className="flex justify-between items-center w-full h-16 backdrop-blur-sm bg-white/70 fixed z-[99999] border border-b-dark px-10 md:px-16">
       <div className="justify-center items-center">
         <Logo
           textStyle="text-2xl justify-start md:text-2xl"
@@ -43,7 +43,7 @@ const Navbar: React.FC<NavProps> = ({ isSearch = false, isHome = false }) => {
               <li>
                 {isHome ? (
                   <Link
-                    href="/user/savedlistings"
+                    href="/savedlistings"
                     className="py-2 px-7 rounded-full border-2 border-primary"
                   >
                     Saved Listings

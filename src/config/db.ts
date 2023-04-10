@@ -1,11 +1,14 @@
 import {
   addDoc,
+  arrayUnion,
+  arrayRemove,
   doc,
   collection,
   getFirestore,
   getDocs,
   getDoc,
   setDoc,
+  updateDoc,
   query,
   where,
   onSnapshot,
@@ -78,6 +81,22 @@ export const addListing = async ({ title, ...rest }: Listing) => {
   const data = { title, ...rest };
   const docRef = await addDoc(collection(db, "listings"), data);
   return docRef;
+};
+
+export const saveListing = async (id: string, userId: string) => {
+  const docRef = doc(db, "users", userId);
+
+  await updateDoc(docRef, {
+    savedListing: arrayUnion({ id }),
+  });
+};
+
+export const unsaveListing = async (id: string, userId: string) => {
+  const docRef = doc(db, "users", userId);
+
+  await updateDoc(docRef, {
+    savedListing: arrayRemove({ id }),
+  });
 };
 
 export const addUser = async ({ id, ...rest }: User) => {

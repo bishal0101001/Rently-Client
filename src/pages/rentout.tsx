@@ -365,8 +365,8 @@ const Rentout: React.FC<Props> = () => {
               label="Submit"
               style={`${
                 isDisabled
-                  ? "text-dark bg-lightText"
-                  : "text-primary bg-secondary"
+                  ? "text-dark bg-lightText mb-2"
+                  : "text-primary bg-secondary mb-2"
               } !w-full`}
               rootStyle="w-full mt-6"
               isDisabled={isDisabled}
