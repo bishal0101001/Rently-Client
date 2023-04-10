@@ -23,7 +23,7 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
   const [showToast, setShowToast] = useState(false);
   const handleCopy = async () => {
     try {
-      listingOwnerDetails.phone &&
+      listingOwnerDetails?.phone &&
         (await navigator.clipboard.writeText(listingOwnerDetails.phone));
       setShowToast(true);
     } catch (err) {
@@ -38,7 +38,9 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
         {/* <ImageSlider /> */}
         <div className="w-auto h-[80vh] drop-shadow-2xl">
           <div className="w-[70vw] h-full">
-            <Carousel src={listing.img} />
+            <Carousel
+              src={listing?.img ? listing.img : ["/assets/noimage.jpg"]}
+            />
           </div>
           <div className="flex flex-col items-start justify-evenly bg-secondary drop-shadow-2xl rounded-xl w-80 h-80 p-4 absolute right-0 -bottom-48">
             <div>
@@ -76,10 +78,10 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
                 className="flex items-center justify-center gap-2 w-full h-full bg-primary text-secondary rounded cursor-pointer"
                 onClick={handleCopy}
               >
-                <BsTelephoneFill size={20} /> {listingOwnerDetails.phone}
+                <BsTelephoneFill size={20} /> {listingOwnerDetails?.phone}
               </span>
               <Link
-                href={`mailto:${listingOwnerDetails.email}`}
+                href={`mailto:${listingOwnerDetails?.email}`}
                 className="flex items-center justify-center gap-2 w-full h-full bg-primary text-secondary rounded cursor-pointer"
               >
                 Email <MdEmail size={20} />
@@ -93,10 +95,10 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
               <FaHouseUser size={40} color="white" />
             </div>
             <h1 className="flex flex-col font-semibold text-3xl ">
-              {`${listing.category} listed by - ${listingOwnerDetails.name}`}
+              {`${listing?.category} listed by - ${listingOwnerDetails?.name}`}
               <span className="text-sm">
-                {listing.createdAt && new Date(listing.createdAt).getDay()} days
-                ago
+                {listing?.createdAt && new Date(listing?.createdAt).getDay()}{" "}
+                days ago
               </span>
             </h1>
           </div>
@@ -107,7 +109,11 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
             <h1 className="text-2xl font-semibold mb-2">Comments</h1>
             <div className="flex flex-col gap-6 overflow-y-scroll py-4">
               {commentDetails?.map((c) => (
-                <Comments img={c.img} name={c.name} comment={c.comment} />
+                <Comments
+                  img={c?.img ? c.img : "/assets/person-placeholder.jpg"}
+                  name={c.name}
+                  comment={c.comment}
+                />
               ))}
             </div>
             <div className="w-full h-6 bg-gradient-to-b from-secondary to-primary opacity-10 absolute bottom-0 rounded-b-lg"></div>
@@ -118,7 +124,7 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
 
             <div className="w-full h-96 object-cover rounded">
               <Map
-                markers={[{ id: "1", position: listing.address.position }]}
+                markers={[{ id: "1", position: listing?.address.position }]}
                 Icon={ImLocation2}
               />
             </div>
@@ -153,7 +159,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
