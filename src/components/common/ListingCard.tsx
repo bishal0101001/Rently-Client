@@ -7,9 +7,10 @@ import { facilities } from "./../../services/fakeFacilitiesService";
 import Skeleton from "react-loading-skeleton";
 import Facilities from "./Facilities";
 import { Listing } from "src/interface/Listings";
-import { saveListing, unsaveListing } from "src/config/db";
+import { saveListing, unsaveListing, updateListings } from "src/config/db";
 import { useDispatch } from "react-redux";
 import { toggleSaveListing } from "src/slices/userSlice";
+import { ListingActions } from "src/enums/listingActions";
 
 interface Props {
   id?: string;
@@ -38,13 +39,16 @@ const ListingCard: React.FC<Props> = ({
   const dispatch = useDispatch();
   const handleSave = async () => {
     if (id && currentUserId) {
-      saveListing(id, currentUserId);
+      updateListings(id, currentUserId, ListingActions.SAVE_LISTING);
+      // saveListing(id, currentUserId);
       dispatch(toggleSaveListing([{ id }]));
     }
   };
   const handleUnsave = async () => {
     if (id && currentUserId) {
-      unsaveListing(id, currentUserId);
+      updateListings(id, currentUserId, ListingActions.UNSAVE_LISTING);
+
+      // unsaveListing(id, currentUserId);
       dispatch(toggleSaveListing([{ id }]));
     }
   };

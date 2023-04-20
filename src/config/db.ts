@@ -12,6 +12,7 @@ import {
   query,
   where,
   onSnapshot,
+  deleteDoc,
 } from "firebase/firestore";
 // import { deleteObject, ref } from "firebase/storage";
 // import { storage } from "./firebase";
@@ -20,6 +21,7 @@ import { Listing } from "src/interface/Listings";
 import app from "./firebase";
 import { uuidv4 } from "@firebase/util";
 import { User } from "./../interface/User";
+import { ListingActions } from "src/enums/listingActions";
 
 export const db = getFirestore(app);
 
@@ -83,6 +85,24 @@ export const addListing = async ({ title, ...rest }: Listing) => {
   return docRef;
 };
 
+export const deleteListing = async (userId: string, listingId: string) => {
+  const docRef = doc(db, "listings", listingId);
+  try {
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      docSnap.data().userId === userId && deleteDoc(docRef);
+      return { msg: "Deleted Successfully" };
+    } else {
+      return { error: "Listing doesnot exists" };
+    }
+  } catch (error) {
+    return { error };
+  }
+
+  // const docRef = await deleteDoc(doc(db, "listings", listingId), );
+  // return docRef;
+};
+
 export const saveListing = async (id: string, userId: string) => {
   const docRef = doc(db, "users", userId);
 
@@ -97,6 +117,50 @@ export const unsaveListing = async (id: string, userId: string) => {
   await updateDoc(docRef, {
     savedListing: arrayRemove({ id }),
   });
+};
+
+export const updateListings = async (
+  id: string,
+  userId: string,
+  actionType: ListingActions
+) => {
+  const docRef = doc(db, "users", userId);
+
+  switch (actionType) {
+    case ListingActions.SAVE_LISTING:
+      await updateDoc(docRef, {
+        savedListing: arrayUnion({ id }),
+      });
+      break;
+    case ListingActions.UNSAVE_LISTING:
+      await updateDoc(docRef, {
+        savedListing: arrayRemove({ id }),
+      });
+      break;
+    case ListingActions.ADD_LISTING:
+      await updateDoc(docRef, {
+        myListings: arrayUnion({ id }),
+      });
+      break;
+    case ListingActions.DELETE_LISTING:
+      try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          docSnap.data().userId === userId && (await deleteDoc(docRef));
+          updateDoc(docRef, {
+            myListings: arrayRemove({ id }),
+          });
+          return { msg: "Deleted Successfully" };
+        } else {
+          return { msg: "Listing doesnot exists" };
+        }
+      } catch (error) {
+        return { msg: error };
+      }
+
+    default:
+      break;
+  }
 };
 
 export const addUser = async ({ id, ...rest }: User) => {

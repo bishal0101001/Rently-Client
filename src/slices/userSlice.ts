@@ -1,19 +1,13 @@
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
+import { User } from "src/interface/User";
 import { RootState } from "src/store";
 import { objectsAreEqual } from "src/utils/objectsAreEqual";
 
-interface userDetails {
-  id: string;
-  name: string | null;
-  email: string | null;
-  phone: string | null;
-  address?: string;
-  token: string;
+interface userDetails extends User {
   currentLocation?: google.maps.LatLngLiteral;
-  savedListings: savedListings[];
 }
 
-interface savedListings {
+interface listingId {
   id: string;
 }
 
@@ -45,9 +39,31 @@ const userSlice = createSlice({
     ) => {
       state.userDetails!.currentLocation = action.payload;
     },
+    toggleMyListings: (
+      state: userState,
+      action: PayloadAction<listingId>
+    ) => {
+      if (state.userDetails) {
+        if (
+          state.userDetails.myListings.some((item) =>
+            objectsAreEqual(current(item), action.payload)
+          )
+        ) {
+          state.userDetails.myListings = state.userDetails.myListings.filter(
+            (item) => item.id !== action.payload.id
+          );
+        } else {
+          state.userDetails.myListings.push(action.payload);
+          // state.userDetails.savedListings = [
+          //   ...state.userDetails.savedListings,
+          //   ...action.payload,
+          // ];
+        }
+      }
+    },
     toggleSaveListing: (
       state: userState,
-      action: PayloadAction<savedListings[]>
+      action: PayloadAction<listingId[]>
     ) => {
       if (state.userDetails) {
         if (
@@ -73,7 +89,7 @@ const userSlice = createSlice({
 
 export const selectUser = (state: RootState) => state.user;
 
-export const { login, logout, setCurrentLocation, toggleSaveListing } =
+export const { login, logout, setCurrentLocation, toggleSaveListing, toggleMyListings } =
   userSlice.actions;
 
 export default userSlice.reducer;

@@ -9,6 +9,7 @@ type Props = {};
 
 const HomeAuthenticated = (props: Props) => {
   const { data, error, isLoading } = useGetListingsQuery();
+  const topListings = data?.listings.slice(0, 10);
 
   return (
     <>
@@ -65,7 +66,7 @@ const HomeAuthenticated = (props: Props) => {
           Listings near you
         </h1>
         <div className="flex flex-wrap justify-start items-center mb-10 gap-5 md:justify-between">
-          {data?.listings.map((i) => (
+          {topListings?.map((i) => (
             <Link
               key={i.id}
               className="flex cursor-pointer"

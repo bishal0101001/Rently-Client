@@ -49,6 +49,7 @@ const LoginView: React.FC<Props> = () => {
           //@ts-ignore
           token: user.accessToken,
           savedListings: [],
+          myListings: [],
         })
       );
       setLoading(false);
@@ -78,6 +79,7 @@ const LoginView: React.FC<Props> = () => {
         //@ts-ignore
         token: user.accessToken,
         savedListings: [],
+        myListings: [],
       })
     );
     user.email &&
@@ -86,8 +88,10 @@ const LoginView: React.FC<Props> = () => {
         id: user.uid,
         name: user.displayName,
         email: user.email,
-        phone: user?.phoneNumber || undefined,
+        phone: user.phoneNumber,
         address: "",
+        savedListings: [],
+        myListings: [],
       }));
   };
 

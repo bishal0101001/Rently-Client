@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { storage } from "src/config/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
@@ -34,7 +34,7 @@ import {
 
 import withAuth from "./../hocs/withAuth";
 
-import { selectUser } from "src/slices/userSlice";
+import { selectUser, toggleMyListings } from "src/slices/userSlice";
 import { useAddListingMutation } from "src/slices/apiSlice";
 
 import { ListingCategories } from "src/enums/listingCategoryEnums";
@@ -45,6 +45,8 @@ import {
   numericSelectValues,
 } from "../services/selectValuesService";
 import { MarkerType } from "@components/common/Map";
+import { updateListings } from "src/config/db";
+import { ListingActions } from "src/enums/listingActions";
 // import { storeImageUrl } from "src/config/db";
 
 interface Props {
@@ -88,6 +90,7 @@ const Rentout: React.FC<Props> = () => {
   const [addListing, { isLoading, isError, error, isSuccess }] =
     useAddListingMutation();
   const router = useRouter();
+  const dispatch = useDispatch();
 
   if (isError) {
     console.log(error, "Error");
@@ -142,9 +145,17 @@ const Rentout: React.FC<Props> = () => {
       createdAt: Date.now().toString(),
     };
 
-    console.log(listingDetails, "listingDetails");
-
-    await addListing(listingDetails);
+    const listing = await addListing(listingDetails);
+    if (listing.hasOwnProperty("data")) {
+      updateListings(
+        //@ts-ignore
+        listing!.data.id,
+        userDetails!.id,
+        ListingActions.ADD_LISTING
+      );
+      //@ts-ignore
+      dispatch(toggleMyListings({ id: listing!.data.id }));
+    }
     // await storeImageUrl(img);
   };
 
@@ -159,12 +170,10 @@ const Rentout: React.FC<Props> = () => {
       for (let i = 0; i < files.length && i < 10; i++) {
         newSelectedImages.push(files[i]);
       }
+      const newArr = [...imageUpload, ...newSelectedImages];
 
-      setImageUpload((prev) => [...prev, ...newSelectedImages]);
+      setImageUpload(newArr);
     }
-    console.log("imageupload handler before");
-    await handleImageUpload();
-    console.log("imageupload handler after");
   };
 
   const handleImageUpload = async () => {
@@ -199,6 +208,7 @@ const Rentout: React.FC<Props> = () => {
         async () => {
           setIsUploading(false);
           console.log("Uploaded!.", uploadTask);
+          setImageUpload([]);
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
           setImg((prev) => [...prev, downloadURL]);
         }
@@ -207,14 +217,20 @@ const Rentout: React.FC<Props> = () => {
   };
 
   useEffect(() => {
-    console.log(place, "place");
     title.length === 0 ||
     description.length === 0 ||
     landmark.length === 0 ||
-    price.length === 0
+    price.length === 0 ||
+    isUploading
       ? setIsDisabled(true)
       : setIsDisabled(false);
   }, [title, description, landmark, price, place]);
+
+  useEffect(() => {
+    (async () => {
+      await handleImageUpload();
+    })();
+  }, [imageUpload]);
 
   if (!isAuthenticated) return <Loading />;
 

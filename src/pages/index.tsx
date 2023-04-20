@@ -13,6 +13,7 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "src/config/firebase";
 import { getUserById } from "src/config/db";
+import { myListings } from "./../services/fakeListingsService";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,6 +40,7 @@ export default function Home() {
             //@ts-ignore
             token: currentUser.accessToken,
             savedListings: userDetails.savedListing,
+            myListings: userDetails.myListings,
           })
         );
         // dispatch(toggleSaveListing(userDetails.savedListing));

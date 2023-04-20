@@ -1,8 +1,11 @@
 export interface User {
   id: string;
-  name: string;
-  email: string;
-  phone?: string;
+  name: string | null;
+  email: string | null;
+  phone?: string | null;
   address?: string;
-  savedListing?: { id: string }[];
+  token?: string;
+  currentLocation?: google.maps.LatLngLiteral;
+  savedListings: { id: string }[];
+  myListings: { id: string }[];
 }

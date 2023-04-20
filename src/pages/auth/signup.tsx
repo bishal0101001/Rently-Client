@@ -53,6 +53,7 @@ const SignUpView: FC<Props> = () => {
           //@ts-ignore
           token: user.accessToken,
           savedListings: [],
+          myListings: [],
         })
       );
 
@@ -64,7 +65,8 @@ const SignUpView: FC<Props> = () => {
           email: user.email,
           phone,
           address: "",
-          savedListing: [],
+          myListings: [],
+          savedListings: [],
         });
 
       setLoading(false);
@@ -90,6 +92,7 @@ const SignUpView: FC<Props> = () => {
         //@ts-ignore
         token: user.accessToken,
         savedListings: [],
+        myListings: [],
       })
     );
     user.email &&
@@ -100,6 +103,8 @@ const SignUpView: FC<Props> = () => {
         email: user.email,
         phone: user?.phoneNumber || undefined,
         address: "",
+        myListings: [],
+        savedListings: [],
       }));
   };
 

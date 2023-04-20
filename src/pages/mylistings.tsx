@@ -16,6 +16,10 @@ const mylistings = (props: Props) => {
   const { isAuthenticated, userDetails } = useSelector(selectUser);
   const { data } = useGetListingsQuery();
 
+  const myListings = data?.listings.filter((listing) =>
+    userDetails?.myListings.some((i) => i.id === listing.id)
+  );
+
   if (!isAuthenticated) return <Loading />;
   return (
     <div className="flex flex-col justify-between h-screen">
@@ -23,11 +27,13 @@ const mylistings = (props: Props) => {
       <div className="flex flex-col items-start justify-between gap-5 mx-16 pt-20">
         <h1 className="text-3xl font-bold mx-auto mt-8">My Listings</h1>
         <div>
-          {data?.listings.map((listing) => {
-            if (listing.userId === userDetails?.id) {
-              return <ListingItems listingItem={listing} />;
-            }
-          })}
+          {myListings &&
+            myListings?.map((listing) => (
+              <ListingItems
+                listingItem={listing}
+                currentUserId={userDetails!.id}
+              />
+            ))}
         </div>
       </div>
       <Footer />
