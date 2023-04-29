@@ -37,7 +37,7 @@ const search = (props: Props) => {
       <div className="h-screen">
         <Navbar isSearch={true} />
         <div className="flex pt-20">
-          <div className="basis-2/6 mr-5 h-[80vh]">
+          <div className="basis-2/6 mr-5 h-[90vh]">
             <Map listings={data?.listings} center={position} zoom={zoom} />
           </div>
           <div className="basis-4/6 flex flex-col items-start h-[80vh] overflow-y-auto pr-10 md:pr-12">
@@ -68,7 +68,7 @@ const search = (props: Props) => {
             </div>
           </div>
         </div>
-        <Footer />
+        <Footer rootStyle="absolute bottom-0" />
       </div>
     </>
   );

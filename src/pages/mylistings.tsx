@@ -32,6 +32,7 @@ const mylistings = (props: Props) => {
               <ListingItems
                 listingItem={listing}
                 currentUserId={userDetails!.id}
+                key={listing.id}
               />
             ))}
         </div>

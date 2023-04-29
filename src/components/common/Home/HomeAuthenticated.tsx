@@ -9,7 +9,7 @@ type Props = {};
 
 const HomeAuthenticated = (props: Props) => {
   const { data, error, isLoading } = useGetListingsQuery();
-  // const topListings = data?.listings.slice(0, 10);
+  const topListings = data?.listings.slice(0, 6);
 
   return (
     <>
@@ -62,11 +62,11 @@ const HomeAuthenticated = (props: Props) => {
             </div>
           </Link>
         </div>
-        <h1 className="text-2xl font-semibold items-start justify-start mb-4">
+        <h1 className="text-2xl font-semibold items-start justify-start mt-4">
           Listings near you
         </h1>
-        <div className="flex flex-wrap justify-start items-center mb-10 gap-5 md:justify-between">
-          {data?.listings?.map((i) => (
+        <div className="flex flex-wrap justify-center items-center mb-2 gap-5 h-20 overflow-y-hidden overflow-x-hidden w-full ">
+          {topListings?.map((i) => (
             <Link
               key={i.id}
               className="flex cursor-pointer"
@@ -78,9 +78,9 @@ const HomeAuthenticated = (props: Props) => {
                   className="w-4 h-4 md:w-7 md:h-6 rounded-full"
                 />
               </div>
-              <div className="basis-4/5 flex flex-col justify-center">
+              <div className="basis-4/5 flex flex-col justify-center overflow-hidden">
                 <h1 className="text-lg font-semibold">{i.title}</h1>
-                <p>{i?.address?.title}</p>
+                <p className="overflow-hidden">{i?.address?.title}</p>
               </div>
             </Link>
           ))}

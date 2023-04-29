@@ -120,6 +120,7 @@ const Rentout: React.FC<Props> = () => {
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+
     const listingDetails: Listing = {
       title,
       userId: userDetails!.id,
@@ -140,7 +141,7 @@ const Rentout: React.FC<Props> = () => {
       reserved: false,
       category: category.selectedCategory,
       price,
-      img,
+      img: img.length < 1 ? ["/assets/noimage.png"] : img,
       lastUpdated: Date.now().toString(),
       createdAt: Date.now().toString(),
     };
@@ -242,7 +243,7 @@ const Rentout: React.FC<Props> = () => {
         <div className="flex flex-col px-16 items-center justify-center h-screen">
           <div className="flex justify-between mt-10 ">
             <div className="basis-1/2 flex flex-col justify-start items-start mr-10 z-[9999]">
-              <h1 className="text-7xl font-extrabold cursor-pointer">
+              <h1 className="text-7xl font-extrabold">
                 Maximize your rental income with Rently.
               </h1>
               <p className="text-dark text-xl my-5 w-2/3">

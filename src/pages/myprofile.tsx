@@ -99,7 +99,7 @@ const myprofile = (props: Props) => {
               val={me && me.address}
               disabled={true}
             />
-            <Button href="#" label="Save" onClick={handleSave} />
+            <Button href="#" label="Save" onClick={handleSave} style="mr-2" />
             <Button href="#" label="Edit" />
           </div>
         </div>
