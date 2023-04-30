@@ -8,9 +8,11 @@ const savedlistings = () => {
   const { userDetails } = useSelector(selectUser);
   const { data, error, isLoading } = useGetListingsQuery();
 
-  const listings = data?.listings.filter((item) =>
-    userDetails?.savedListings.some((saved) => saved.id === item.id)
-  );
+  const listings =
+    userDetails?.savedListings &&
+    data?.listings.filter((item) =>
+      userDetails?.savedListings.some((saved) => saved.id === item.id)
+    );
 
   return (
     <>

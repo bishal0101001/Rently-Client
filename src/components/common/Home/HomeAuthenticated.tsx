@@ -9,7 +9,7 @@ type Props = {};
 
 const HomeAuthenticated = (props: Props) => {
   const { data, error, isLoading } = useGetListingsQuery();
-  const topListings = data?.listings.slice(0, 6);
+  const topListings = data?.listings.slice(0, 5);
 
   return (
     <>

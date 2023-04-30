@@ -54,7 +54,7 @@ const search = (props: Props) => {
                     nearestLandmark={i?.nearbyLandmark}
                     img={i?.img[0]}
                     saved={
-                      userDetails
+                      userDetails?.savedListings
                         ? userDetails?.savedListings.some(
                             (item) => item.id === i.id
                           )

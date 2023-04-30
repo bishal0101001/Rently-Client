@@ -113,6 +113,7 @@ const ListingDetailsPage = ({ listing, listingOwnerDetails }: Props) => {
                   img={c?.img ? c.img : "/assets/person-placeholder.jpg"}
                   name={c.name}
                   comment={c.comment}
+                  key={c.name}
                 />
               ))}
             </div>
