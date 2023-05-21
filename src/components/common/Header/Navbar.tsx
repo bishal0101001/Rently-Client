@@ -24,8 +24,8 @@ const Navbar: React.FC<NavProps> = ({ isSearch = false, isHome = false }) => {
   };
 
   return (
-    <nav className="flex justify-between items-center w-full h-16 backdrop-blur-sm bg-white/70 fixed z-[99999] border border-b-dark px-10 md:px-16">
-      <div className="justify-center items-center">
+    <nav className="flex justify-between items-center w-full h-16 backdrop-blur-sm bg-white/70 fixed z-[99999] border border-b-dark px-10 md:justify-center md:px-16">
+      <div className="justify-center items-start mr-40 md:mr-96 lg:mr-[700px]">
         <Logo
           textStyle="text-2xl justify-start md:text-2xl"
           imgStyle="w-7 h-7 md:w-7 md:h-7"
